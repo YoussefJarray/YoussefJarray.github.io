@@ -1,11 +1,14 @@
 {
+  "homepage": "https://youssefjarray.github.io/",
   "name": "react-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
     "start": "next start",
+    "dev": "next dev",
+    "predeploy": "npm run build",
+    "deploy": "gh-pgaes -d build"
+    "build": "next build",
     "lint": "next lint"
   },
   "dependencies": {
