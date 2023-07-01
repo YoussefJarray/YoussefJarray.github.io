@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face{
+    font-family: "Inter";
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+}
+
+* {
+    font-family: "Inter";
+    cursor: none;
+}
+
+.cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    border: 2px solid;
+    border-color: rgb(20 184 166);
+    pointer-events: none;
+    z-index: 20;
+}
+
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    translate: 14px 14px;
+    width: 4px;
+    height: 4px;
+    background-color: rgb(20 184 166);
+    border-radius: 16px;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.cursor-clicked {
+    transition-property: all;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out;
+    position: fixed;
+    left: 0;
+    top: 0;
+    translate: -4px -4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background: rgb(20, 184, 166, 0.2);
+    border: 2px solid rgb(20 184 166);
+    pointer-events: none;
+    z-index: 20;
+}
+
+::selection {
+    background-color: rgb(20 184 166);
+    color: white;
+}
