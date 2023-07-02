@@ -5,6 +5,7 @@ import {BiAdjust} from 'react-icons/bi'
 import {BsDiscord, BsTwitter, BsYoutube, BsFacebook} from 'react-icons/bs'
 import { useState, useEffect, useRef } from "react"
 import {color, motion} from 'framer-motion'
+import {BrowserView, MobileView} from 'react-device-detect';
 
 function Card({imgPath, title, desc}){
   return (
@@ -60,14 +61,18 @@ export default function App() {
           <meta name="desc" content=""></meta>
           <link rel='icon' href='/favicon.ico'></link>
       </Head>
-      <motion.div ref={cursorOutline} transition={{ delay: 0, type: "Tween" }}  className='cursor' animate={{
+      <BrowserView>
+        <motion.div ref={cursorOutline} transition={{ delay: 0, type: "Tween" }}  className='cursor' animate={{
           translateX : x,
           translateY : y,
-        }}></motion.div>
+        }}>
+        </motion.div>
         <motion.div transition={{ delay: -100, type: "Tween" }} className='cursor-dot' animate={{
           translateX : x,
           translateY : y,
-        }}></motion.div>
+        }}
+        ></motion.div>
+      </BrowserView>
       <main className='bg-white px-10 md:px-20 lg:px-40 dark:bg-gray-900 transition-all duration-300'>
         <header>
           <nav className='py-10 mb-10 flex justify-between'>
@@ -89,10 +94,10 @@ export default function App() {
             </p>
           </div> 
           <div className='text-2xl flex justify-center gap-10 text-cyan-500'>
-            <BsDiscord/>
-            <BsTwitter/>
-            <BsFacebook/>
-            <BsYoutube/>
+            <a href='https://discord.com'><BsDiscord className='active:text-gray-800'/></a>
+            <a href='https://twitter.com/cat_lover69420'><BsTwitter className='active:text-gray-800'/></a>
+            <a href='https://www.facebook.com/profile.php?id=100006996826825'><BsFacebook className='active:text-gray-800'/></a>
+            <a href='https://www.youtube.com/channel/UCl6tMupa4HTSdT-eFE4CeWQ'><BsYoutube className='active:text-gray-800'/></a>
           </div>
           <div className='relative bg-gradient-to-b from-cyan-500 w-80 h-80 rounded-full select-none pointer-events-none my-20 mx-auto overflow-hidden md:h-96 md:w-96'>
             <Image src="/me.png" fill objectFit='cover'/>
