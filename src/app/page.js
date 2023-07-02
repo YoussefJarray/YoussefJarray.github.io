@@ -62,12 +62,12 @@ export default function App() {
           <link rel='icon' href='/favicon.ico'></link>
       </Head>
       <BrowserView>
-        <motion.div ref={cursorOutline} transition={{ delay: 0, type: "Tween" }}  className='cursor' animate={{
+        <motion.div ref={cursorOutline} transition={{ delay: 0, type: "Tween" }}  className='cursor pointer-events-none' animate={{
           translateX : x,
           translateY : y,
         }}>
         </motion.div>
-        <motion.div transition={{ delay: -100, type: "Tween" }} className='cursor-dot' animate={{
+        <motion.div transition={{ delay: -100, type: "Tween" }} className='cursor-dot pointer-events-none' animate={{
           translateX : x,
           translateY : y,
         }}
