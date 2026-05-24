@@ -282,7 +282,7 @@ export default function Sudoku() {
           title="Toggle notes (N)"
         >✎ Notes</button>
         <button onClick={erase} style={btnBase} title="Erase (Del)">⌫</button>
-        <button onClick={undo} style={btnBase} disabled={!history.length} title="Undo (Ctrl+Z)"
+        <button onClick={undo} disabled={!history.length} title="Undo (Ctrl+Z)"
           style={{ ...btnBase, opacity: history.length ? 1 : 0.35 }}>↩ Undo</button>
       </div>
 

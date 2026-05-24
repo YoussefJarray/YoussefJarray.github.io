@@ -418,6 +418,36 @@ export const fileSystem = {
       })),
     },
     {
+      name: "github.url",
+      type: "file",
+      icon: "url",
+      meta: {
+        title: "GitHub",
+        url: "https://github.com/YoussefJarray",
+        content: "GitHub profile — open-source projects and contributions.",
+      },
+    },
+    {
+      name: "linkedin.url",
+      type: "file",
+      icon: "url",
+      meta: {
+        title: "LinkedIn",
+        url: "https://www.linkedin.com/in/youssef-jarray-410227112/",
+        content: "LinkedIn profile — professional experience and network.",
+      },
+    },
+    {
+      name: "email.url",
+      type: "file",
+      icon: "url",
+      meta: {
+        title: "Email",
+        url: "mailto:youssef.jarray@epi.tn",
+        content: "Send me an email.",
+      },
+    },
+    {
       name: "about.txt",
       type: "file",
       icon: "file",
@@ -442,6 +472,23 @@ I build real-time experiences with **Unity**, **C++**, and modern web technologi
 - GitHub: [YoussefJarray](https://github.com/YoussefJarray)
 - LinkedIn: [Youssef Jarray](https://www.linkedin.com/in/youssef-jarray-410227112/)
 - Location: Sousse, Tunisia`,
+      },
+    },
+    {
+      name: "welcome.txt",
+      type: "file",
+      icon: "file",
+      meta: {
+        content: `Welcome to my portfolio!
+
+This is a fully functional desktop environment built in the browser.
+Browse around, open apps, play games, or check out my projects.
+
+Tips:
+- Double-click folders and files to open them
+- Use the sidebar to navigate
+- Check out the Start Menu for all available apps
+- Have fun!`,
       },
     },
   ],

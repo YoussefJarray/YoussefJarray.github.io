@@ -2,7 +2,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { fileSystem } from "../data/fileSystem";
 import { useWindowStore } from "../store/windowStore";
-import { FiFolder, FiFile, FiChevronRight, FiChevronDown, FiHome } from "react-icons/fi";
+import { FiFolder, FiFile, FiChevronRight, FiChevronDown, FiHome, FiExternalLink } from "react-icons/fi";
 
 function findNode(tree, path) {
   if (!path || path.length === 0) return tree;
@@ -67,7 +67,7 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
                 </div>
               ) : (
                 <span className={`text-3xl transition-transform duration-150 ${isSelected ? "scale-110" : "group-hover:scale-110"}`}>
-                  {isFolder ? "\uD83D\uDCC1" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : "\uD83D\uDCC4"}
+                  {isFolder ? "\uD83D\uDCC1" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : item.icon === "url" ? "\uD83D\uDD17" : "\uD83D\uDCC4"}
                 </span>
               )}
               <span className={`text-[10px] text-center leading-tight truncate w-full ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>
@@ -107,6 +107,10 @@ export default function FileManager() {
 
   const openFile = useCallback((item) => {
     if (item.type === "file") {
+      if (item.icon === "url" && item.meta?.url) {
+        window.open(item.meta.url, "_blank", "noopener,noreferrer");
+        return;
+      }
       openWindow("markdown", item);
     }
   }, [openWindow]);
@@ -144,13 +148,26 @@ export default function FileManager() {
           Files
         </div>
         <div className="p-1.5">
-          <SidebarTree
-            items={fileSystem.children?.filter((c) => c.type === "folder").map((c) => ({ ...c, parent: "root" }))}
-            currentPath={path}
-            onSelect={sidebarSelect}
-            selectedFile={selectedItem?.name || null}
-            depth={0}
-          />
+          <button
+            onClick={goRoot}
+            className={`flex items-center gap-1 w-full text-left px-3 py-1.5 rounded-md transition-all duration-150 text-xs btn-hover ${
+              path.length === 0
+                ? "bg-surface-hover text-primary"
+                : "text-secondary hover:bg-surface-hover"
+            }`}
+          >
+            <FiHome size={12} className="shrink-0" />
+            <span className="font-medium truncate">Home</span>
+          </button>
+          <div className="mt-1">
+            <SidebarTree
+              items={fileSystem.children?.filter((c) => c.type === "folder").map((c) => ({ ...c, parent: "root" }))}
+              currentPath={path}
+              onSelect={sidebarSelect}
+              selectedFile={selectedItem?.name || null}
+              depth={0}
+            />
+          </div>
         </div>
       </div>
       <div className="flex-1 flex flex-col min-w-0">
