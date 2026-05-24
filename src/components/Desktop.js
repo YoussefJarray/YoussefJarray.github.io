@@ -24,8 +24,7 @@ import TicTacToe from "./TicTacToe";
 import Sudoku from "./Sudoku";
 import Pong from "./Pong";
 import Doom from "./Doom";
-import dynamic from "next/dynamic";
-const PdfViewer = dynamic(() => import("./PdfViewer"), { ssr: false });
+import PdfViewer from "./PdfViewer";
 
 const appComponents = {
   FileManager, Terminal, AboutApp, SettingsApp, BrowserApp, PhotosApp, MarkdownViewer, TicTacToe, Sudoku, Pong, Doom, PdfViewer,
