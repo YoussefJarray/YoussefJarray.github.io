@@ -5,7 +5,7 @@ import { useAudioStore } from "../store/audioStore";
 import { FiWifi, FiWifiOff, FiVolume2, FiVolume1, FiVolumeX, FiSearch, FiStar, FiMonitor, FiTerminal, FiGlobe, FiImage, FiPlay } from "react-icons/fi";
 import { FaUbuntu, FaCog, FaPowerOff } from "react-icons/fa";
 import ContextMenu from "./ContextMenu";
-import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon } from "./icons/GameIcons";
+import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon, PdfIcon } from "./icons/GameIcons";
 
 const confettiColors = ["#f97316", "#ef4444", "#34d399", "#3b82f6", "#a855f7", "#fbbf24", "#ec4899"];
 
@@ -62,6 +62,7 @@ const appIcons = {
   pong: <PongIcon size={14} />,
   tictactoe: <TicTacToeIcon size={14} />,
   sudoku: <SudokuIcon size={14} />,
+  pdf: <PdfIcon size={14} />,
 };
 
 const categories = [
@@ -97,6 +98,7 @@ const appsByCategory = {
   system: [
     { id: "settings", icon: "\u2699\uFE0F", label: "Settings", desc: "Preferences" },
     { id: "about", icon: "\uD83D\uDC64", label: "About Me", desc: "Personal info" },
+    { id: "resume", icon: <PdfIcon size={22} />, label: "Resume", desc: "View my CV" },
   ],
 };
 

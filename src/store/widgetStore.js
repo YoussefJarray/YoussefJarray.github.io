@@ -2,14 +2,20 @@ import { create } from "zustand";
 
 const STORAGE_KEY = "portfolio-widget-state";
 
+function getZoom() {
+  if (typeof document === "undefined") return 1;
+  return parseFloat(document.documentElement.style.zoom) || 1;
+}
+
 function getDefaultWidgets() {
-  const rx = typeof window !== "undefined" ? window.innerWidth - 224 : 1200;
-  const ww = typeof window !== "undefined" ? window.innerWidth : 1400;
+  const zoom = getZoom();
+  const vw = typeof window !== "undefined" ? window.innerWidth * zoom : 1200;
+  const vh = typeof window !== "undefined" ? window.innerHeight * zoom : 900;
   return {
-    clock: { enabled: true, x: rx, y: 60 },
-    sticky: { enabled: true, x: rx - 220, y: 60 },
-    cat: { enabled: true, x: rx, y: 200 },
-    music: { enabled: true, x: Math.max(0, ww / 2 - 132), y: typeof window !== "undefined" ? window.innerHeight - 260 : 500 },
+    clock: { enabled: true, x: vw - 224, y: 60 },
+    sticky: { enabled: true, x: vw - 444, y: 60 },
+    cat: { enabled: true, x: vw - 224, y: 200 },
+    music: { enabled: true, x: Math.max(0, vw / 2 - 132), y: vh - 260 },
   };
 }
 

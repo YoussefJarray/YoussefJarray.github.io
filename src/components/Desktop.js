@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useWindowStore } from "../store/windowStore";
 import { useThemeStore } from "../store/themeStore";
 import { useIconStore } from "../store/iconStore";
+import { useWidgetStore } from "../store/widgetStore";
 import { useWallpaperStore, wallpapers } from "../store/wallpaperStore";
+import { useSettingsStore } from "../store/settingsStore";
 import TopPanel from "./TopPanel";
 import DesktopIcons from "./DesktopIcons";
 import BootScreen from "./BootScreen";
@@ -22,9 +24,11 @@ import TicTacToe from "./TicTacToe";
 import Sudoku from "./Sudoku";
 import Pong from "./Pong";
 import Doom from "./Doom";
+import dynamic from "next/dynamic";
+const PdfViewer = dynamic(() => import("./PdfViewer"), { ssr: false });
 
 const appComponents = {
-  FileManager, Terminal, AboutApp, SettingsApp, BrowserApp, PhotosApp, MarkdownViewer, TicTacToe, Sudoku, Pong, Doom,
+  FileManager, Terminal, AboutApp, SettingsApp, BrowserApp, PhotosApp, MarkdownViewer, TicTacToe, Sudoku, Pong, Doom, PdfViewer,
 };
 
 function hexToRgb(hex) {
@@ -133,7 +137,7 @@ function useWallpaperBrightness(wpUrl) {
 
 function Wallpaper({ url }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none">
       <img key={url} src={url} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.3) 100%)" }} />
     </div>
@@ -145,12 +149,36 @@ export default function Desktop() {
   const init = useThemeStore((s) => s.init);
   const mode = useThemeStore((s) => s.mode);
   const { selected, setAccent } = useWallpaperStore();
+  const scale = useSettingsStore((s) => s.scale);
   const selectedWp = useMemo(() => wallpapers.find((w) => w.id === selected.wallpaper) || wallpapers[0], [selected.wallpaper]);
   const isWallpaperDark = useWallpaperBrightness(selectedWp.url);
   const [booted, setBooted] = useState(false);
   const [ctxMenu, setCtxMenu] = useState(null);
 
   useEffect(() => { init(); }, [init]);
+
+  const prevScale = useRef(scale);
+
+  useEffect(() => {
+    const old = prevScale.current;
+    if (old !== scale) {
+      const ratio = old / scale;
+      const store = useWidgetStore.getState();
+      const moved = {};
+      for (const [id, w] of Object.entries(store.widgets)) {
+        moved[id] = { ...w, x: Math.round(w.x * ratio), y: Math.round(w.y * ratio) };
+      }
+      useWidgetStore.setState({ widgets: moved });
+
+      const iconStore = useIconStore.getState();
+      const newPos = {};
+      for (const [id, p] of Object.entries(iconStore.positions)) {
+        newPos[id] = { x: Math.round(p.x * ratio), y: Math.round(p.y * ratio) };
+      }
+      useIconStore.setState({ positions: newPos });
+    }
+    prevScale.current = scale;
+  }, [scale]);
 
   useEffect(() => {
     const base = async () => {
@@ -182,15 +210,26 @@ export default function Desktop() {
     >
       <Wallpaper url={selectedWp.url} />
       <TopPanel />
-      <DesktopIcons wallpaperDark={isWallpaperDark} />
-      <DesktopWidgets wallpaperDark={isWallpaperDark} />
+
+      <div
+        style={{
+          width: `${100 / scale}%`,
+          height: `${100 / scale}%`,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+      >
+        <DesktopIcons wallpaperDark={isWallpaperDark} />
+        <DesktopWidgets wallpaperDark={isWallpaperDark} />
+      </div>
+
       <AnimatePresence>
         {Object.entries(windows).map(([id, win]) => {
           if (!win.isOpen || win.isMinimized) return null;
           const AppComponent = appComponents[win.app];
           if (!AppComponent) return null;
           return (
-            <Window key={id} id={id} title={win.title} icon={win.icon}>
+            <Window key={id} id={id} title={win.title} icon={win.icon} scale={scale}>
               <AppComponent />
             </Window>
           );

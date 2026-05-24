@@ -12,6 +12,7 @@ const defaultApps = [
   { id: "sudoku", title: "Sudoku", icon: "sudoku", app: "Sudoku", x: 250, y: 80, w: 360, h: 440 },
   { id: "pong", title: "Pong", icon: "pong", app: "Pong", x: 150, y: 40, w: 680, h: 500 },
   { id: "doom", title: "Doom", icon: "doom", app: "Doom", x: 100, y: 30, w: 680, h: 500 },
+  { id: "resume", title: "Resume", icon: "pdf", app: "PdfViewer", x: 236, y: 60, w: 680, h: 600 },
 ];
 
 const buildInitial = () => {

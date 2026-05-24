@@ -79,10 +79,7 @@ export default function MarkdownViewer() {
         </div>
       </div>
 
-      <div ref={contentRef} className="flex-1 overflow-auto relative" onClick={(e) => {
-        const a = e.target.closest("a");
-        if (a?.href && !a.href.startsWith("#")) { e.preventDefault(); window.open(a.href, "_blank", "noopener,noreferrer"); }
-      }}>
+      <div ref={contentRef} className="flex-1 overflow-auto relative">
         <button
           onClick={() => setSidebarOpen((v) => !v)}
           className="absolute z-10 p-1 rounded-md transition-all hover:bg-white/10"

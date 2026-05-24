@@ -452,26 +452,11 @@ export const fileSystem = {
       type: "file",
       icon: "file",
       meta: {
-        content: `# About Me
+        content: `# About
 
-**Youssef "Yuki" Jarray**
+Student at EPI, trying to break into game dev. C# / Unity.
 
-Software Engineering student at **EPI**, specializing in **VR & Game Engineering**.
-
-I build real-time experiences with **Unity**, **C++**, and modern web technologies. Currently working on **FitVR**, a VR fitness game built with Unity 6 and OpenXR.
-
-## Skills
-
-- **Game Dev**: Unity, C#, OpenXR, SteamVR
-- **Web**: React, Next.js, TypeScript, Tailwind
-- **Tools**: Git, Blender, FMOD, Photoshop
-- **Languages**: C#, JavaScript, Python, C++
-
-## Contact
-
-- GitHub: [YoussefJarray](https://github.com/YoussefJarray)
-- LinkedIn: [Youssef Jarray](https://www.linkedin.com/in/youssef-jarray-410227112/)
-- Location: Sousse, Tunisia`,
+Open the **About** app on the desktop for the full thing — bio, skills, stats, socials, the whole deal.`,
       },
     },
     {
@@ -489,6 +474,15 @@ Tips:
 - Use the sidebar to navigate
 - Check out the Start Menu for all available apps
 - Have fun!`,
+      },
+    },
+    {
+      name: "resume.pdf",
+      type: "file",
+      icon: "pdf",
+      meta: {
+        title: "Resume",
+        content: "My latest resume.",
       },
     },
   ],

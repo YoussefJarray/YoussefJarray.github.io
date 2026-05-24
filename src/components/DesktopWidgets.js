@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useWidgetStore } from "../store/widgetStore";
 import { useThemeStore } from "../store/themeStore";
+import { useSettingsStore } from "../store/settingsStore";
 import ContextMenu from "./ContextMenu";
 import MusicWidget from "./MusicWidget";
 
@@ -282,12 +283,13 @@ const widgetLabels = {
 export default function DesktopWidgets({ wallpaperDark }) {
   const { widgets, toggleWidget } = useWidgetStore();
   const mode = useThemeStore((s) => s.mode);
+  const scale = useSettingsStore((s) => s.scale);
   const [ctxMenu, setCtxMenu] = useState(null);
   const [ctxWidgetId, setCtxWidgetId] = useState(null);
 
   const handleWidgetContext = (e, wid) => {
     setCtxWidgetId(wid);
-    setCtxMenu({ x: e.clientX, y: e.clientY });
+    setCtxMenu({ x: e.clientX / scale, y: e.clientY / scale });
   };
 
   const menuItems = Object.entries(widgetLabels).map(([wid, label]) => ({
@@ -323,6 +325,7 @@ export default function DesktopWidgets({ wallpaperDark }) {
         <ContextMenu
           x={ctxMenu.x}
           y={ctxMenu.y}
+          scale={scale}
           items={[
             ...menuItems,
             { divider: true },

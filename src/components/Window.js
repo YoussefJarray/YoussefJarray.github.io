@@ -3,7 +3,7 @@ import { useRef, useCallback, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useWindowStore } from "../store/windowStore";
 import { FiX, FiMinus, FiSquare } from "react-icons/fi";
-import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon } from "./icons/GameIcons";
+import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon, PdfIcon } from "./icons/GameIcons";
 
 const appIcons = {
   folder: "\uD83D\uDCC1",
@@ -15,6 +15,7 @@ const appIcons = {
   pong: <PongIcon size={14} />,
   tictactoe: <TicTacToeIcon size={14} />,
   sudoku: <SudokuIcon size={14} />,
+  pdf: <PdfIcon size={14} />,
   photos: (
     <svg viewBox="0 0 24 24" width="16" height="16" fill="white" stroke="black" strokeWidth="1.5" className="shrink-0">
       <rect x="2" y="3" width="20" height="18" rx="2" />
@@ -32,7 +33,7 @@ const resizeCursorMap = {
   ne: "ne-resize", nw: "nw-resize", se: "se-resize", sw: "sw-resize",
 };
 
-export default function Window({ id, title, icon, children }) {
+export default function Window({ id, title, icon, scale = 1, children }) {
   const { windows, focusedWindowId, closeWindow, minimizeWindow, focusWindow, moveWindow, toggleMaximize, resizeWindow, startMenuOpen } = useWindowStore();
   const win = windows[id];
   const isFocused = focusedWindowId === id;
@@ -52,13 +53,13 @@ export default function Window({ id, title, icon, children }) {
       const maxH = window.innerHeight - 48;
       const ratioX = e.clientX / maxW;
       const ratioY = (e.clientY - 48) / maxH;
-      const newW = Math.max(MIN_W, Math.min(win.size.width, maxW * 0.8));
-      const newH = Math.max(MIN_H, Math.min(win.size.height, maxH * 0.8));
-      const newX = Math.max(0, Math.min(e.clientX - newW * ratioX, window.innerWidth - newW));
-      const newY = Math.max(0, Math.min(e.clientY - 48 - newH * ratioY, window.innerHeight - 48 - newH));
+      const newW = Math.max(MIN_W, Math.min(win.size.width, maxW * 0.8 / scale));
+      const newH = Math.max(MIN_H, Math.min(win.size.height, maxH * 0.8 / scale));
+      const newX = Math.max(0, Math.min((e.clientX - newW * ratioX * scale) / scale, (window.innerWidth - newW * scale) / scale));
+      const newY = Math.max(0, Math.min((e.clientY - 48 - newH * ratioY * scale) / scale, (window.innerHeight - 48 - newH * scale) / scale));
       toggleMaximize(id);
       moveWindow(id, newX, newY);
-      dragOffset.current = { x: e.clientX - newX, y: e.clientY - 48 - newY };
+      dragOffset.current = { x: e.clientX - newX * scale, y: e.clientY - 48 - newY * scale };
       wasMaximized.current = true;
       setDragging(true);
       return;
@@ -66,8 +67,8 @@ export default function Window({ id, title, icon, children }) {
 
     setDragging(true);
     wasMaximized.current = false;
-    dragOffset.current = { x: e.clientX - win.position.x, y: e.clientY - 48 - win.position.y };
-  }, [id, focusWindow, win, toggleMaximize, moveWindow]);
+    dragOffset.current = { x: e.clientX - win.position.x * scale, y: e.clientY - 48 - win.position.y * scale };
+  }, [id, focusWindow, win, toggleMaximize, moveWindow, scale]);
 
   const handleResizeStart = useCallback((dir, e) => {
     e.stopPropagation();
@@ -81,7 +82,9 @@ export default function Window({ id, title, icon, children }) {
   useEffect(() => {
     if (!dragging) return;
     const onMove = (e) => {
-      moveWindow(id, e.clientX - dragOffset.current.x, e.clientY - 48 - dragOffset.current.y);
+      const x = (e.clientX - dragOffset.current.x) / scale;
+      const y = (e.clientY - 48 - dragOffset.current.y) / scale;
+      moveWindow(id, x, y);
     };
     const onUp = () => {
       setDragging(false);
@@ -93,13 +96,13 @@ export default function Window({ id, title, icon, children }) {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
     };
-  }, [dragging, id, moveWindow]);
+  }, [dragging, id, moveWindow, scale]);
 
   useEffect(() => {
     if (!resizing) return;
     const onMove = (e) => {
-      const dx = e.clientX - resizeStart.current.x;
-      const dy = e.clientY - resizeStart.current.y;
+      const dx = (e.clientX - resizeStart.current.x) / scale;
+      const dy = (e.clientY - resizeStart.current.y) / scale;
       let newW = resizeStart.current.w;
       let newH = resizeStart.current.h;
       let newX = resizeStart.current.px;
@@ -128,12 +131,12 @@ export default function Window({ id, title, icon, children }) {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
     };
-  }, [resizing, id, resizeWindow, moveWindow]);
+  }, [resizing, id, resizeWindow, moveWindow, scale]);
 
   if (!win || !win.isOpen || win.isMinimized) return null;
 
   const maxed = win.isMaximized;
-  const pos = maxed ? { x: 0, y: 0 } : win.position;
+  const pos = maxed ? { x: 0, y: 0 } : { x: win.position.x * scale, y: win.position.y * scale };
 
   return (
     <motion.div
@@ -146,8 +149,8 @@ export default function Window({ id, title, icon, children }) {
       style={{
         left: pos.x,
         top: maxed ? 48 : pos.y + 48,
-        width: maxed ? "100vw" : win.size.width,
-        height: maxed ? "calc(100vh - 48px)" : win.size.height,
+        width: maxed ? "100vw" : win.size.width * scale,
+        height: maxed ? "calc(100vh - 48px)" : win.size.height * scale,
         zIndex: startMenuOpen ? 1 : win.zIndex,
         cursor: dragging ? "grabbing" : (resizing ? resizeCursorMap[resizing] : "default"),
       }}

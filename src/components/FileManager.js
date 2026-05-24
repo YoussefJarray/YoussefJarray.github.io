@@ -2,7 +2,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { fileSystem } from "../data/fileSystem";
 import { useWindowStore } from "../store/windowStore";
-import { FiFolder, FiFile, FiChevronRight, FiChevronDown, FiHome, FiExternalLink } from "react-icons/fi";
+import { FiFolder, FiChevronRight, FiChevronDown, FiHome } from "react-icons/fi";
 
 function findNode(tree, path) {
   if (!path || path.length === 0) return tree;
@@ -57,7 +57,7 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
               key={i}
               onClick={() => onSelect(i)}
               onDoubleClick={() => onOpen(item)}
-              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-150 group ${
+              className={`flex flex-col items-center p-3 rounded-xl transition-all duration-150 group min-h-[84px] ${
                 isSelected ? "bg-white/10 border border-white/15" : "border border-transparent hover:bg-white/5"
               }`}
             >
@@ -67,9 +67,10 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
                 </div>
               ) : (
                 <span className={`text-3xl transition-transform duration-150 ${isSelected ? "scale-110" : "group-hover:scale-110"}`}>
-                  {isFolder ? "\uD83D\uDCC1" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : item.icon === "url" ? "\uD83D\uDD17" : "\uD83D\uDCC4"}
+                  {isFolder ? "\uD83D\uDCC1" : item.icon === "pdf" ? "\uD83D\uDCD5" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : item.icon === "url" ? "\uD83D\uDD17" : "\uD83D\uDCC4"}
                 </span>
               )}
+              <div className="flex-1" />
               <span className={`text-[10px] text-center leading-tight truncate w-full ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>
                 {item.name}
               </span>
@@ -109,6 +110,10 @@ export default function FileManager() {
     if (item.type === "file") {
       if (item.icon === "url" && item.meta?.url) {
         window.open(item.meta.url, "_blank", "noopener,noreferrer");
+        return;
+      }
+      if (item.icon === "pdf") {
+        openWindow("resume", item);
         return;
       }
       openWindow("markdown", item);

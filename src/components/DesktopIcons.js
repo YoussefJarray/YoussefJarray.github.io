@@ -2,8 +2,9 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useWindowStore } from "../store/windowStore";
 import { useIconStore } from "../store/iconStore";
+import { useSettingsStore } from "../store/settingsStore";
 import ContextMenu from "./ContextMenu";
-import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon } from "./icons/GameIcons";
+import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon, PdfIcon } from "./icons/GameIcons";
 
 function PhotosIcon({ wallpaperDark }) {
   const stroke = wallpaperDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)";
@@ -23,6 +24,7 @@ const customIcons = {
   pong: () => <PongIcon size={28} />,
   tictactoe: () => <TicTacToeIcon size={28} />,
   sudoku: () => <SudokuIcon size={28} />,
+  resume: () => <PdfIcon size={28} />,
 };
 
 const desktopItems = [
@@ -36,10 +38,12 @@ const desktopItems = [
   { id: "pong", icon: "custom-pong", label: "Pong" },
   { id: "tictactoe", icon: "custom-tictactoe", label: "Tic-Tac-Toe" },
   { id: "sudoku", icon: "custom-sudoku", label: "Sudoku" },
+  { id: "resume", icon: "custom-resume", label: "Resume" },
 ];
 
 function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, selected, onSelect }) {
   const { moveIcon } = useIconStore();
+  const scale = useSettingsStore((s) => s.scale);
   const posRef = useRef(defaultPos);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -62,19 +66,19 @@ function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, s
     if (!dragging) return;
 
     const onMove = (e) => {
-      setOffset({ x: e.clientX - dragRef.current.startX, y: e.clientY - dragRef.current.startY });
+      setOffset({ x: (e.clientX - dragRef.current.startX) / scale, y: (e.clientY - dragRef.current.startY) / scale });
     };
     const onUp = (e) => {
       setDragging(false);
-      const dx = e.clientX - dragRef.current.startX;
-      const dy = e.clientY - dragRef.current.startY;
-      const dist = Math.abs(dx) + Math.abs(dy);
+      const dx = (e.clientX - dragRef.current.startX) / scale;
+      const dy = (e.clientY - dragRef.current.startY) / scale;
+      const dist = Math.abs(e.clientX - dragRef.current.startX) + Math.abs(e.clientY - dragRef.current.startY);
       if (dist < 8) {
         clickCount.current += 1;
         if (clickCount.current === 2) { onActivate(); clickCount.current = 0; clearTimeout(clickTimer.current); }
         else { onSelect(); clearTimeout(clickTimer.current); clickTimer.current = setTimeout(() => { clickCount.current = 0; }, 350); }
       } else {
-        const finalY = Math.max(48, Math.min(dragRef.current.startPosY + dy, window.innerHeight - 80));
+        const finalY = Math.max(48 / scale, Math.min(dragRef.current.startPosY + dy, (window.innerHeight - 80) / scale));
         moveIcon(id, dragRef.current.startPosX + dx, finalY);
         posRef.current = { x: dragRef.current.startPosX + dx, y: finalY };
         setOffset({ x: 0, y: 0 });
@@ -83,7 +87,7 @@ function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, s
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
     return () => { document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); };
-  }, [dragging, id, moveIcon, onActivate, onSelect]);
+  }, [dragging, id, moveIcon, onActivate, onSelect, scale]);
 
   const currentX = dragging ? defaultPos.x + offset.x : defaultPos.x;
   const currentY = dragging ? defaultPos.y + offset.y : defaultPos.y;
@@ -109,7 +113,7 @@ function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, s
         backdropFilter: selected ? "blur(4px)" : "none",
         outline: selected ? `1.5px solid ${borderSelected}` : "none",
       }}
-      onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setCtxMenu({ x: e.clientX, y: e.clientY }); }}
+      onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setCtxMenu({ x: e.clientX / scale, y: e.clientY / scale }); }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseDown={(e) => {
@@ -150,6 +154,7 @@ function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, s
         <ContextMenu
           x={ctxMenu.x}
           y={ctxMenu.y}
+          scale={scale}
           items={[
             { label: "Open", icon: "▸", onClick: onActivate },
           ]}

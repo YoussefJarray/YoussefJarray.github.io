@@ -13,6 +13,7 @@ const defaultPositions = {
   pong: { x: 24, y: 376 },
   tictactoe: { x: 130, y: 300 },
   sudoku: { x: 130, y: 376 },
+  resume: { x: 24, y: 452 },
 };
 
 const loadPositions = () => {

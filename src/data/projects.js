@@ -28,10 +28,9 @@ export const stats = [
 
 export const socials = [
   { icon: "FaGithub", href: "https://github.com/YoussefJarray", label: "GitHub" },
-  { icon: "FaLinkedin", href: "https://linkedin.com/in/YOUR_LINKEDIN", label: "LinkedIn" },
-  { icon: "FaTwitter", href: "https://twitter.com/cat_lover69420", label: "Twitter" },
+  { icon: "FaLinkedin", href: "https://www.linkedin.com/in/youssef-jarray-410227112/", label: "LinkedIn" },
   { icon: "FaYoutube", href: "https://www.youtube.com/channel/UCl6tMupa4HTSdT-eFE4CeWQ", label: "YouTube" },
-  { icon: "FaEnvelope", href: "mailto:youssef@example.com", label: "Email" },
+  { icon: "FaEnvelope", href: "mailto:youssefjarray8@gmail.com", label: "Email" },
 ];
 
 export const skillCategories = [

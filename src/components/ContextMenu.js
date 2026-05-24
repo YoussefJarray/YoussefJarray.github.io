@@ -1,8 +1,11 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-export default function ContextMenu({ x, y, items, onClose }) {
+export default function ContextMenu({ x, y, items, onClose, scale = 1 }) {
   const ref = useRef(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const handle = (e) => {
@@ -18,10 +21,10 @@ export default function ContextMenu({ x, y, items, onClose }) {
     return () => window.removeEventListener("scroll", handle);
   }, [onClose]);
 
-  const clampedX = Math.min(x, window.innerWidth - 180);
-  const clampedY = Math.min(y, window.innerHeight - items.length * 36 - 8);
+  const clampedX = Math.min(x, (window.innerWidth - 180) / scale);
+  const clampedY = Math.min(y, (window.innerHeight - items.length * 36 - 8) / scale);
 
-  return (
+  const menu = (
     <div
       ref={ref}
       className="fixed z-[9999] rounded-xl shadow-2xl border border-subtle overflow-hidden py-1"
@@ -56,4 +59,6 @@ export default function ContextMenu({ x, y, items, onClose }) {
       )}
     </div>
   );
+
+  return mounted ? createPortal(menu, document.body) : null;
 }

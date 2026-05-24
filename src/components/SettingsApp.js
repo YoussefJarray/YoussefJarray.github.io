@@ -2,17 +2,20 @@
 import { useState } from "react";
 import { useThemeStore } from "../store/themeStore";
 import { useWallpaperStore, wallpapers, accentColors } from "../store/wallpaperStore";
-import { FiSun, FiMoon, FiMonitor, FiInfo, FiCpu, FiDroplet, FiCheck } from "react-icons/fi";
+import { useAudioStore } from "../store/audioStore";
+import { useSettingsStore } from "../store/settingsStore";
+import { FiSun, FiMoon, FiMonitor, FiCpu, FiDroplet, FiCheck, FiVolume2, FiMaximize } from "react-icons/fi";
 
 const sections = [
   { id: "appearance", label: "Appearance", icon: FiDroplet },
   { id: "system", label: "System", icon: FiCpu },
-  { id: "about", label: "About", icon: FiInfo },
 ];
 
 export default function SettingsApp() {
   const { mode, toggle } = useThemeStore();
   const { selected, setWallpaper, setAccent } = useWallpaperStore();
+  const { volume, setVolume } = useAudioStore();
+  const { scale, setScale } = useSettingsStore();
   const [activeSection, setActiveSection] = useState("appearance");
 
   return (
@@ -154,22 +157,68 @@ export default function SettingsApp() {
         {activeSection === "system" && (
           <div>
             <h2 className="text-sm font-semibold text-primary mb-4">System</h2>
+
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-medium text-secondary">Volume</p>
+                <span className="text-[10px] text-muted font-mono">{Math.round(volume * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FiVolume2 size={14} className="text-muted shrink-0" />
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={Math.round(volume * 100)}
+                  onChange={(e) => setVolume(Number(e.target.value) / 100)}
+                  className="flex-1 slider-accent"
+                  style={{ accentColor: "var(--accent)" }}
+                />
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-medium text-secondary">Window Scale</p>
+                <span className="text-[10px] text-muted font-mono">{Math.round(scale * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FiMaximize size={14} className="text-muted shrink-0" />
+                <input
+                  type="range"
+                  min="80"
+                  max="120"
+                  step="5"
+                  value={Math.round(scale * 100)}
+                  onChange={(e) => setScale(Number(e.target.value) / 100)}
+                  className="flex-1 slider-accent"
+                  style={{ accentColor: "var(--accent)" }}
+                />
+              </div>
+              <div className="flex gap-1.5 mt-2">
+                {[80, 90, 100, 110, 120].map((pct) => (
+                  <button
+                    key={pct}
+                    onClick={() => setScale(pct / 100)}
+                    className={`text-[10px] px-2 py-1 rounded-md transition-all btn-hover ${
+                      Math.round(scale * 100) === pct
+                        ? "bg-accent/15 text-accent font-medium"
+                        : "text-muted hover:text-secondary bg-surface-hover"
+                    }`}
+                  >
+                    {pct}%
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="rounded-xl border border-subtle p-4" style={{ background: "var(--bg-surface)" }}>
               <p className="text-xs text-secondary">Wallpapers sourced from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="font-medium" style={{ color: "var(--accent)" }}>Unsplash</a>.</p>
             </div>
           </div>
         )}
 
-        {activeSection === "about" && (
-          <div>
-            <h2 className="text-sm font-semibold text-primary mb-4">About</h2>
-            <div className="rounded-xl border border-subtle p-4" style={{ background: "var(--bg-surface)" }}>
-              <p className="text-xs text-secondary leading-relaxed">
-                All rights for assets used belong to their respective owners.
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
