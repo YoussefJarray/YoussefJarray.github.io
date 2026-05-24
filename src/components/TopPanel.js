@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useWindowStore } from "../store/windowStore";
 import { useAudioStore } from "../store/audioStore";
 import { FiWifi, FiWifiOff, FiVolume2, FiVolume1, FiVolumeX, FiSearch, FiStar, FiMonitor, FiTerminal, FiGlobe, FiImage } from "react-icons/fi";
@@ -246,6 +246,20 @@ export default function TopPanel() {
   const [showVolume, setShowVolume] = useState(false);
   const [showWifi, setShowWifi] = useState(false);
   const [showBattery, setShowBattery] = useState(false);
+
+  const closeAllPopups = useCallback(() => {
+    setShowCalendar(false);
+    setShowVolume(false);
+    setShowWifi(false);
+    setShowBattery(false);
+  }, []);
+
+  useEffect(() => {
+    if (!showCalendar && !showVolume && !showWifi && !showBattery) return;
+    const handler = () => closeAllPopups();
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showCalendar, showVolume, showWifi, showBattery, closeAllPopups]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("favorites");
   const [tabCtxMenu, setTabCtxMenu] = useState(null);

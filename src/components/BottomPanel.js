@@ -11,7 +11,7 @@ const dockApps = [
 ];
 
 export default function BottomPanel() {
-  const { windows, openWindow, focusWindow } = useWindowStore();
+  const { windows, openWindow, focusWindow, toggleMaximize } = useWindowStore();
 
   const handleClick = (id) => {
     const win = windows[id];
@@ -21,6 +21,12 @@ export default function BottomPanel() {
     } else {
       openWindow(id);
     }
+  };
+
+  const handleDoubleClick = (id) => {
+    const win = windows[id];
+    if (!win || !win.isOpen || win.isMinimized) return;
+    toggleMaximize(id);
   };
 
   return (
@@ -42,6 +48,7 @@ export default function BottomPanel() {
             <button
               key={id}
               onClick={() => handleClick(id)}
+              onDoubleClick={() => handleDoubleClick(id)}
               className="relative flex flex-col items-center justify-center gap-0.5 px-4 py-2 rounded-xl hover:bg-white/10 transition-all duration-200 group min-w-[52px]"
               title={label}
             >

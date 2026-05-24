@@ -168,6 +168,94 @@ State is managed with **Zustand** stores:
 
 const posts = [
   {
+    title: "Building Interactive 3D Worlds with Three.js",
+    slug: "threejs-3d-worlds",
+    date: "2026-05-10",
+    excerpt: "Exploring how Three.js makes WebGL accessible for creating immersive 3D experiences in the browser.",
+    tags: ["Three.js", "WebGL", "JavaScript", "3D"],
+    thumbnail: "/thumbnails/threejs.svg",
+    content: `# Building Interactive 3D Worlds with Three.js
+
+Three.js is the most popular WebGL library for a reason — it turns complex 3D graphics into readable JavaScript.
+
+## Getting Started
+
+\`\`\`javascript
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.3, metalness: 0.1 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+camera.position.z = 5;
+\`\`\`
+
+## Lighting Makes the Difference
+
+A flat-lit 3D scene looks dead. Three.js offers several light types:
+
+- **AmbientLight** — base illumination, no direction
+- **DirectionalLight** — sun-like parallel rays
+- **PointLight** — emits in all directions from a point
+- **SpotLight** — cone-shaped, like a stage light
+
+\`\`\`javascript
+const ambient = new THREE.AmbientLight(0x404060);
+scene.add(ambient);
+
+const directional = new THREE.DirectionalLight(0xffffff, 1);
+directional.position.set(5, 10, 7);
+scene.add(directional);
+\`\`\`
+
+## Loading 3D Models
+
+For anything beyond primitives, you'll want glTF models:
+
+\`\`\`javascript
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const loader = new GLTFLoader();
+loader.load('/models/helmet.gltf', (gltf) => {
+  scene.add(gltf.scene);
+}, undefined, (error) => {
+  console.error('Error loading model:', error);
+});
+\`\`\`
+
+## Animation Loop
+
+The core of any Three.js app is the render loop:
+
+\`\`\`javascript
+function animate() {
+  requestAnimationFrame(animate);
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  renderer.render(scene, camera);
+}
+animate();
+\`\`\`
+
+## Performance Tips
+
+- Use **BufferGeometry** (the default since r125)
+- Enable **frustum culling** (it's on by default)
+- Merge geometries with **BufferGeometryUtils.mergeGeometries**
+- Use **instanced meshes** for repeated objects
+- Keep draw calls under 100 for mobile
+
+Three.js makes 3D on the web accessible without sacrificing performance. Whether you're building data visualizations, games, or interactive portfolios, it's the right tool for the job.`,
+  },
+  {
     title: "Building a VR Game in Unity 6",
     slug: "building-vr-unity-6",
     date: "2025-12-15",
@@ -325,6 +413,7 @@ export const fileSystem = {
           excerpt: p.excerpt,
           tags: p.tags,
           content: p.content,
+          thumbnail: p.thumbnail,
         },
       })),
     },

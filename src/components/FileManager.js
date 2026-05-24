@@ -61,9 +61,15 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
                 isSelected ? "bg-white/10 border border-white/15" : "border border-transparent hover:bg-white/5"
               }`}
             >
-              <span className={`text-3xl transition-transform duration-150 ${isSelected ? "scale-110" : "group-hover:scale-110"}`}>
-                {isFolder ? "\uD83D\uDCC1" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : "\uD83D\uDCC4"}
-              </span>
+              {!isFolder && item.meta?.thumbnail ? (
+                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0" style={{ border: "1px solid var(--border)" }}>
+                  <img src={item.meta.thumbnail} alt="" className="w-full h-full object-cover" loading="lazy" />
+                </div>
+              ) : (
+                <span className={`text-3xl transition-transform duration-150 ${isSelected ? "scale-110" : "group-hover:scale-110"}`}>
+                  {isFolder ? "\uD83D\uDCC1" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : "\uD83D\uDCC4"}
+                </span>
+              )}
               <span className={`text-[10px] text-center leading-tight truncate w-full ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>
                 {item.name}
               </span>

@@ -95,6 +95,11 @@ export default function MarkdownViewer() {
           {sidebarOpen ? <FiChevronLeft size={12} /> : <FiChevronRight size={12} />}
         </button>
         <div className="p-8 max-w-3xl mx-auto">
+          {meta.thumbnail && (
+            <div className="mb-6 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border)", background: "var(--bg-root)", aspectRatio: "16/9" }}>
+              <img src={meta.thumbnail} alt={meta.title || ""} className="w-full h-full object-cover" loading="lazy" />
+            </div>
+          )}
           {(meta.title || meta.date) && (
             <header className="mb-8 pb-6" style={{ borderBottom: "1px solid var(--border)" }}>
               {meta.date && (

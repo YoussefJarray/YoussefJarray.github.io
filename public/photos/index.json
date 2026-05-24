@@ -1,0 +1,11 @@
+[
+  { "src": "/photos/Projects/fitvr.svg", "title": "FitVR Gameplay", "cat": "Projects" },
+  { "src": "/photos/Projects/workspace.svg", "title": "Workspace", "cat": "Projects" },
+  { "src": "/photos/Personal/desk.svg", "title": "Desk Setup", "cat": "Personal" },
+  { "src": "/photos/Projects/code.svg", "title": "Code Editor", "cat": "Projects" },
+  { "src": "/photos/Personal/sunset.svg", "title": "Sunset View", "cat": "Personal" },
+  { "src": "/photos/Personal/meetup.svg", "title": "Dev Meetup", "cat": "Personal" },
+  { "src": "/photos/Projects/unity.svg", "title": "Unity Editor", "cat": "Projects" },
+  { "src": "/photos/Personal/beach.svg", "title": "Beach Day", "cat": "Personal" },
+  { "src": "/photos/Personal/setup.svg", "title": "Full Setup", "cat": "Personal" }
+]
