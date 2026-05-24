@@ -12,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        Inter: "Inter"
+        inter: "Inter",
+        anton: "Anton",
       }
     },
   },

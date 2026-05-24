@@ -1,0 +1,222 @@
+"use client";
+import { useState } from "react";
+import { useThemeStore } from "../store/themeStore";
+import { useWallpaperStore, wallpapers, accentColors } from "../store/wallpaperStore";
+import { FiSun, FiMoon, FiMonitor, FiInfo, FiCpu, FiDroplet, FiCheck } from "react-icons/fi";
+
+const sections = [
+  { id: "appearance", label: "Appearance", icon: FiDroplet },
+  { id: "system", label: "System", icon: FiCpu },
+  { id: "about", label: "About", icon: FiInfo },
+];
+
+export default function SettingsApp() {
+  const { mode, toggle } = useThemeStore();
+  const { selected, setWallpaper, setAccent } = useWallpaperStore();
+  const [activeSection, setActiveSection] = useState("appearance");
+
+  return (
+    <div className="flex h-full">
+      <div className="w-44 border-r border-subtle shrink-0 overflow-auto p-2" style={{ background: "var(--bg-surface)" }}>
+        <div className="flex items-center gap-2.5 px-3 py-3 border-b border-subtle mb-1">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "var(--accent-light)" }}>
+            <FiMonitor style={{ color: "var(--accent)" }} size={14} />
+          </div>
+          <div>
+            <div className="text-xs font-medium text-primary">Settings</div>
+            <div className="text-[9px] text-muted">System Preferences</div>
+          </div>
+        </div>
+        {sections.map((sec) => {
+          const Icon = sec.icon;
+          const isActive = activeSection === sec.id;
+          return (
+            <button
+              key={sec.id}
+              onClick={() => setActiveSection(sec.id)}
+              className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-all duration-150 btn-hover ${
+                isActive
+                  ? "bg-accent/15 text-accent font-medium"
+                  : "text-muted hover:text-secondary hover:bg-surface-hover"
+              }`}
+            >
+              <Icon size={14} />
+              {sec.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex-1 overflow-auto p-5">
+        {activeSection === "appearance" && (
+          <div>
+            <h2 className="text-sm font-semibold text-primary mb-4">Appearance</h2>
+
+            <div className="mb-6">
+              <p className="text-xs font-medium text-secondary mb-3">Wallpaper</p>
+              <div className="grid grid-cols-3 gap-3">
+                {wallpapers.map((wp) => (
+                  <button
+                    key={wp.id}
+                    onClick={() => setWallpaper(wp.id)}
+                    className={`relative aspect-video rounded-xl overflow-hidden border-2 transition-all btn-hover ${
+                      selected.wallpaper === wp.id ? "border-accent" : "border-subtle hover:border-secondary"
+                    }`}
+                  >
+                    <img src={wp.url} alt="" className="w-full h-full object-cover" />
+                    {selected.wallpaper === wp.id && (
+                      <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center">
+                        <FiCheck size={10} color="white" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-xs font-medium text-secondary mb-3">Accent Color</p>
+              <div className="flex flex-wrap gap-2.5">
+                {accentColors.map((ac) => {
+                  const isActive = selected.accent === ac.value;
+                  const isMatch = ac.value === "match";
+                  return (
+                    <button
+                      key={ac.value}
+                      onClick={() => setAccent(ac.value)}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-[10px] transition-all btn-hover ${
+                        isActive
+                          ? "border-accent bg-accent/10"
+                          : "border-subtle hover:border-secondary"
+                      }`}
+                      title={ac.name}
+                    >
+                      {isMatch ? (
+                        <div className="w-4 h-4 rounded-full bg-gradient-to-br from-orange-400 via-rose-400 to-purple-400" />
+                      ) : (
+                        <div className="w-4 h-4 rounded-full" style={{ background: ac.value }} />
+                      )}
+                      <span className="text-secondary">{ac.name}</span>
+                      {isActive && <FiCheck size={10} style={{ color: "var(--accent)" }} />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => { if (mode !== "dark") toggle(); }}
+                className={`flex flex-col items-center gap-3 p-5 rounded-xl border transition-all duration-150 btn-hover ${
+                  mode === "dark" ? "bg-surface-hover" : "bg-surface border-subtle hover:bg-surface-hover"
+                }`}
+                style={{ borderColor: mode === "dark" ? "var(--accent-light)" : "var(--border)" }}
+              >
+                <FiMoon size={22} style={{ color: mode === "dark" ? "var(--accent)" : "var(--text-muted)" }} />
+                <div className="text-center">
+                  <div className="text-xs font-medium text-primary">Dark</div>
+                  <div className="text-[10px] text-muted mt-0.5">Easy on the eyes</div>
+                </div>
+              </button>
+              <button
+                onClick={() => { if (mode !== "light") toggle(); }}
+                className={`flex flex-col items-center gap-3 p-5 rounded-xl border transition-all duration-150 btn-hover ${
+                  mode === "light" ? "bg-surface-hover" : "bg-surface border-subtle hover:bg-surface-hover"
+                }`}
+                style={{ borderColor: mode === "light" ? "var(--accent-light)" : "var(--border)" }}
+              >
+                <FiSun size={22} style={{ color: mode === "light" ? "var(--accent)" : "var(--text-muted)" }} />
+                <div className="text-center">
+                  <div className="text-xs font-medium text-primary">Light</div>
+                  <div className="text-[10px] text-muted mt-0.5">Bright & clean</div>
+                </div>
+              </button>
+            </div>
+
+            <div className="mt-6 p-4 rounded-xl border border-subtle" style={{ background: "var(--bg-surface)" }}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-secondary">Current theme</p>
+                  <p className="text-[10px] text-muted mt-0.5 capitalize">{mode} mode</p>
+                </div>
+                <button
+                  onClick={toggle}
+                  className="text-[10px] font-medium px-3 py-1.5 rounded-lg border transition-colors btn-hover"
+                  style={{ color: "var(--accent)", borderColor: "var(--accent-light)", background: "var(--accent-light)" }}
+                >
+                  Toggle
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeSection === "system" && (
+          <div>
+            <h2 className="text-sm font-semibold text-primary mb-4">System</h2>
+            <div className="rounded-xl border border-subtle divide-y divide-subtle" style={{ background: "var(--bg-surface)" }}>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Portfolio Version</p>
+                  <p className="text-[10px] text-muted mt-0.5">v2.0 — Desktop Edition</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Engine</p>
+                  <p className="text-[10px] text-muted mt-0.5">Next.js + Zustand + Tailwind</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Wallpaper Detection</p>
+                  <p className="text-[10px] text-muted mt-0.5">Auto (canvas luminance)</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Animations</p>
+                  <p className="text-[10px] text-muted mt-0.5">Framer Motion spring physics</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeSection === "about" && (
+          <div>
+            <h2 className="text-sm font-semibold text-primary mb-4">About</h2>
+            <div className="flex flex-col items-center text-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 via-rose-500 to-purple-500 flex items-center justify-center text-xl font-bold text-white mb-3">
+                YJ
+              </div>
+              <h3 className="text-sm font-semibold text-primary">Youssef Jarray</h3>
+              <p className="text-[10px] text-muted mt-0.5">Software Engineering Student</p>
+              <p className="text-[9px] text-muted mt-0.5">EPI · VR & Game Engineering</p>
+            </div>
+            <div className="rounded-xl border border-subtle divide-y divide-subtle" style={{ background: "var(--bg-surface)" }}>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Author</p>
+                  <p className="text-[10px] text-muted mt-0.5">Youssef Jarray</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Purpose</p>
+                  <p className="text-[10px] text-muted mt-0.5">Showcasing projects & skills</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-4 py-3">
+                <div>
+                  <p className="text-xs text-secondary">Built With</p>
+                  <p className="text-[10px] text-muted mt-0.5">Next.js · Zustand · Tailwind</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

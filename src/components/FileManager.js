@@ -1,0 +1,207 @@
+"use client";
+import { useState, useMemo, useCallback } from "react";
+import { fileSystem } from "../data/fileSystem";
+import { useWindowStore } from "../store/windowStore";
+import { FiFolder, FiFile, FiChevronRight, FiChevronDown, FiHome } from "react-icons/fi";
+
+function findNode(tree, path) {
+  if (!path || path.length === 0) return tree;
+  let current = tree;
+  for (const segment of path) {
+    if (!current.children) return null;
+    const next = current.children.find((c) => c.name === segment && c.type === "folder");
+    if (!next) return null;
+    current = next;
+  }
+  return current;
+}
+
+function Breadcrumb({ path, onNavigate, onRoot }) {
+  return (
+    <div className="flex items-center gap-1 px-4 py-2 border-b border-subtle shrink-0 text-xs overflow-x-auto hide-scrollbar">
+      <button
+        onClick={onRoot}
+        className={`flex items-center gap-1 px-2 py-1 rounded-md transition-all duration-150 btn-hover ${
+          path.length === 0 ? "text-accent font-medium" : "text-muted hover:text-secondary"
+        }`}
+      >
+        <FiHome size={12} />
+        <span>Home</span>
+      </button>
+      {path.map((seg, i) => (
+        <span key={i} className="flex items-center gap-1">
+          <span className="text-muted-2 select-none">/</span>
+          <button
+            onClick={() => onNavigate(path.slice(0, i + 1))}
+            className={`px-2 py-1 rounded-md transition-all duration-150 btn-hover ${
+              i === path.length - 1 ? "text-accent font-medium" : "text-muted hover:text-secondary"
+            }`}
+          >
+            {seg}
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function FolderGrid({ items, selected, onSelect, onOpen }) {
+  return (
+    <div className="p-4">
+      <div className="grid grid-cols-4 gap-2">
+        {items.map((item, i) => {
+          const isFolder = item.type === "folder";
+          const isSelected = selected === i;
+          return (
+            <button
+              key={i}
+              onClick={() => onSelect(i)}
+              onDoubleClick={() => onOpen(item)}
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-150 group ${
+                isSelected ? "bg-white/10 border border-white/15" : "border border-transparent hover:bg-white/5"
+              }`}
+            >
+              <span className={`text-3xl transition-transform duration-150 ${isSelected ? "scale-110" : "group-hover:scale-110"}`}>
+                {isFolder ? "\uD83D\uDCC1" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : "\uD83D\uDCC4"}
+              </span>
+              <span className={`text-[10px] text-center leading-tight truncate w-full ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>
+                {item.name}
+              </span>
+              {isFolder && (
+                <span className="text-[8px] text-muted">{item.children?.length || 0} items</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function FileManager() {
+  const { openWindow } = useWindowStore();
+  const [path, setPath] = useState([]);
+  const [selectedIdx, setSelectedIdx] = useState(null);
+
+  const currentFolder = useMemo(() => findNode(fileSystem, path), [path]);
+  const items = currentFolder?.children || [];
+  const selectedItem = selectedIdx !== null ? items[selectedIdx] : null;
+
+  const navigateTo = useCallback((newPath) => {
+    setPath(newPath);
+    setSelectedIdx(null);
+  }, []);
+
+  const openFolder = useCallback((item) => {
+    if (item.type === "folder") {
+      setPath((prev) => [...prev, item.name]);
+      setSelectedIdx(null);
+    }
+  }, []);
+
+  const openFile = useCallback((item) => {
+    if (item.type === "file") {
+      openWindow("markdown", item);
+    }
+  }, [openWindow]);
+
+  const goRoot = useCallback(() => {
+    setPath([]);
+    setSelectedIdx(null);
+  }, []);
+
+  const sidebarSelect = useCallback((item) => {
+    if (item.type === "file") {
+      const idx = items.findIndex((c) => c.name === item.name);
+      if (idx !== -1) {
+        setSelectedIdx(idx);
+      } else if (item.parent) {
+        navigateTo([item.parent]);
+        setSelectedIdx(null);
+      }
+    } else if (item.type === "folder") {
+      if (item.parent === "root") {
+        navigateTo([item.name]);
+      } else if (path.length > 0) {
+        const parentPath = [...path.slice(0, -1), item.name];
+        navigateTo(parentPath);
+      } else {
+        navigateTo([item.name]);
+      }
+    }
+  }, [items, path, navigateTo]);
+
+  return (
+    <div className="flex h-full bg-surface">
+      <div className="w-52 border-r border-subtle overflow-auto shrink-0" style={{ background: "var(--bg-surface)" }}>
+        <div className="px-3 py-2.5 text-[10px] text-muted uppercase tracking-wider font-medium border-b border-subtle shrink-0">
+          Files
+        </div>
+        <div className="p-1.5">
+          <SidebarTree
+            items={fileSystem.children?.filter((c) => c.type === "folder").map((c) => ({ ...c, parent: "root" }))}
+            currentPath={path}
+            onSelect={sidebarSelect}
+            selectedFile={selectedItem?.name || null}
+            depth={0}
+          />
+        </div>
+      </div>
+      <div className="flex-1 flex flex-col min-w-0">
+        <Breadcrumb path={path} onNavigate={navigateTo} onRoot={goRoot} />
+        <div className="flex-1 overflow-auto">
+          {items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-muted gap-2 text-xs">
+              <FiFolder size={32} />
+              <p>Empty folder</p>
+            </div>
+          ) : (
+            <FolderGrid
+              items={items}
+              selected={selectedIdx}
+              onSelect={setSelectedIdx}
+              onOpen={(item) => item.type === "folder" ? openFolder(item) : openFile(item)}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SidebarTree({ items, currentPath, onSelect, selectedFile, depth }) {
+  return items?.map((item, i) => (
+    <SidebarTreeItem key={i} item={item} currentPath={currentPath} onSelect={onSelect} selectedFile={selectedFile} depth={depth} />
+  ));
+}
+
+function SidebarTreeItem({ item, currentPath, onSelect, selectedFile, depth }) {
+  const isInPath = currentPath.includes(item.name);
+  const [open, setOpen] = useState(depth === 0 || isInPath);
+
+  const handleClick = () => {
+    setOpen(true);
+    onSelect(item);
+  };
+
+  return (
+    <div>
+      <button
+        onClick={handleClick}
+        className={`flex items-center gap-1 w-full text-left px-3 py-1.5 rounded-md transition-all duration-150 text-xs btn-hover ${
+          currentPath.length > 0 && currentPath[currentPath.length - 1] === item.name
+            ? "bg-surface-hover text-primary"
+            : "text-secondary hover:bg-surface-hover"
+        }`}
+        style={{ paddingLeft: 12 + depth * 14 }}
+      >
+        {open ? <FiChevronDown size={10} className="text-muted shrink-0" /> : <FiChevronRight size={10} className="text-muted shrink-0" />}
+        <FiFolder size={12} className="shrink-0 text-orange-400" />
+        <span className="font-medium truncate">{item.name}</span>
+      </button>
+      {open && item.children && (
+        <SidebarTree items={item.children.filter((c) => c.type === "folder").map((c) => ({ ...c, parent: item.name }))} currentPath={currentPath} onSelect={onSelect} selectedFile={selectedFile} depth={depth + 1} />
+      )}
+    </div>
+  );
+}
