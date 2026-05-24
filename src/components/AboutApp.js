@@ -1,71 +1,146 @@
 "use client";
-import { stats } from "../data/projects";
-import { FiGithub, FiLinkedin } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { stats, skillCategories } from "../data/projects";
+import { FiGithub, FiLinkedin, FiCode, FiGamepad } from "react-icons/fi";
+
+function useInView(threshold = 0.3) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setInView(true); obs.disconnect(); }
+    }, { threshold });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, inView];
+}
+
+function AnimatedGradient() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full opacity-[0.08]" style={{ background: "radial-gradient(circle, var(--accent), transparent 70%)", animation: "pulse-grad 8s ease-in-out infinite" }} />
+      <div className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full opacity-[0.06]" style={{ background: "radial-gradient(circle, #a855f7, transparent 70%)", animation: "pulse-grad 10s ease-in-out infinite reverse" }} />
+    </div>
+  );
+}
 
 export default function AboutApp() {
+  const [headRef, headIn] = useInView(0.2);
+  const [bioRef, bioIn] = useInView(0.2);
+  const [statsRef, statsIn] = useInView(0.2);
+  const [skillsRef, skillsIn] = useInView(0.2);
+
   return (
-    <div className="h-full overflow-auto p-8">
-      <div className="max-w-lg mx-auto">
-        <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 via-rose-500 to-purple-500 flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-orange-500/20 mb-4">
-            YJ
+    <div className="h-full overflow-auto relative">
+      <AnimatedGradient />
+
+      <div className="max-w-lg mx-auto px-6 py-10 relative">
+        {/* Profile */}
+        <div
+          ref={headRef}
+          className="flex flex-col items-center text-center mb-8"
+          style={{ opacity: headIn ? 1 : 0, transform: headIn ? "translateY(0)" : "translateY(20px)", transition: "all 0.7s cubic-bezier(.22,1,.36,1)" }}
+        >
+          <div className="relative mb-4 group">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 via-rose-500 to-purple-500 flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-orange-500/20 transition-transform duration-300 group-hover:scale-110 cursor-default">
+              YJ
+            </div>
+            <div className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ border: "2px solid var(--accent)", animation: "pulse-ring 2s ease-out infinite" }} />
           </div>
-          <h2 className="text-2xl font-bold text-primary">Youssef Jarray</h2>
-          <p className="text-sm font-medium mt-1" style={{ color: "var(--accent)" }}>Software Engineering Student</p>
-          <p className="text-xs text-muted mt-1">EPI · VR &amp; Game Engineering</p>
+          <h2 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Youssef Jarray</h2>
+          <p className="text-sm font-medium mt-1" style={{ color: "var(--accent)" }}>Student · Game Dev</p>
+          <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>EPI · VR &amp; Game Engineering</p>
         </div>
 
-        <div className="space-y-4 text-sm text-secondary leading-relaxed">
+        {/* Bio */}
+        <div
+          ref={bioRef}
+          className="space-y-4 text-sm leading-relaxed mb-8"
+          style={{ color: "var(--text-secondary)", opacity: bioIn ? 1 : 0, transform: bioIn ? "translateY(0)" : "translateY(16px)", transition: "all 0.7s cubic-bezier(.22,1,.36,1) 0.1s" }}
+        >
           <p>
-            Software Engineering student at EPI with a Bachelor&apos;s in Computer Science,
-            now pursuing <span className="font-medium" style={{ color: "var(--accent)" }}>VR &amp; Game Engineering</span>.
+            Student at EPI trying to break into <span className="font-medium" style={{ color: "var(--accent)" }}>game development</span>.
+            My main language is <span className="font-medium" style={{ color: "var(--accent)" }}>C#</span>, and I live in Unity.
           </p>
           <p>
-            I build real-time experiences \u2014 from Unity games to web apps \u2014 and care deeply about
-            performance, clean architecture, and technology that feels good to use.
-          </p>
-          <p>
-            Currently building <span className="font-medium" style={{ color: "var(--accent)" }}>FitVR</span>, a VR fitness
-            game in Unity 6. Always learning, always shipping.
+            I build real-time experiences — VR games, prototypes, tools — anything that lets me
+            push pixels and learn something new. Right now that&apos;s <span className="font-medium" style={{ color: "var(--accent)" }}>FitVR</span>,
+            a VR fitness game built in Unity 6.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mt-8">
+        {/* Stats */}
+        <div
+          ref={statsRef}
+          className="grid grid-cols-4 gap-2 mb-8"
+          style={{ opacity: statsIn ? 1 : 0, transform: statsIn ? "translateY(0)" : "translateY(16px)", transition: "all 0.7s cubic-bezier(.22,1,.36,1) 0.2s" }}
+        >
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="bg-surface rounded-xl p-4 text-center border border-subtle transition-all duration-150 hover:brightness-110 btn-hover"
+              className="rounded-xl p-3 text-center transition-all duration-200 cursor-default"
+              style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.boxShadow = "0 0 20px rgba(249,115,22,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.boxShadow = "none"; }}
             >
-              <div className="text-xl font-bold bg-gradient-to-r from-orange-400 to-rose-400 bg-clip-text text-transparent">
+              <div className="text-lg font-bold" style={{ background: "linear-gradient(135deg, var(--accent), #a855f7)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 {stat.value}
               </div>
-              <div className="text-[10px] text-muted mt-1 uppercase tracking-wider font-medium">
+              <div className="text-[9px] mt-0.5 uppercase tracking-wider font-medium" style={{ color: "var(--text-muted)" }}>
                 {stat.label}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-8 pt-6 border-t border-subtle flex items-center justify-center gap-4">
-          <a href="https://github.com/YoussefJarray" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-muted hover:text-accent transition-all duration-150 btn-hover">
-            <FiGithub size={14} /> GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/youssef-jarray-410227112/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-muted hover:text-accent transition-all duration-150 btn-hover">
-            <FiLinkedin size={14} /> LinkedIn
-          </a>
+        {/* Skills */}
+        <div
+          ref={skillsRef}
+          className="mb-8"
+          style={{ opacity: skillsIn ? 1 : 0, transform: skillsIn ? "translateY(0)" : "translateY(16px)", transition: "all 0.7s cubic-bezier(.22,1,.36,1) 0.3s" }}
+        >
+          {skillCategories.map((cat) => (
+            <div key={cat.title} className="mb-4 last:mb-0">
+              <p className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: "var(--text-muted)" }}>{cat.title}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {cat.skills.map((s) => (
+                  <span
+                    key={s}
+                    className="text-[11px] px-2.5 py-1 rounded-md transition-all duration-150 cursor-default"
+                    style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", color: "var(--text-secondary)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-light)"; e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "var(--bg-elevated)"; e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.transform = "translateY(0)"; }}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-8 pt-6 border-t border-subtle text-center">
-          <p className="text-xs font-medium text-muted uppercase tracking-wider mb-3">Favourite Spotify</p>
+        {/* Socials */}
+        <div className="flex items-center justify-center gap-4 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
           <a
-            href="https://open.spotify.com/user/7fe7uhw6svr2vla0ts3mni2np"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full text-xs font-medium transition-all duration-150 btn-hover"
-            style={{ background: "#1db954", color: "white" }}
+            href="https://github.com/YoussefJarray" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg transition-all duration-200"
+            style={{ color: "var(--text-muted)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--bg-elevated)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-            Listen on Spotify
+            <FiGithub size={14} /> GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/youssef-jarray-410227112/" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg transition-all duration-200"
+            style={{ color: "var(--text-muted)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--bg-elevated)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; }}
+          >
+            <FiLinkedin size={14} /> LinkedIn
           </a>
         </div>
       </div>

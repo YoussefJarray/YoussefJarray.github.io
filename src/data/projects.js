@@ -20,10 +20,10 @@ export const projects = [
 ];
 
 export const stats = [
-  { value: "3+", label: "Years Coding" },
-  { value: "17+", label: "Repositories" },
-  { value: "C++", label: "Main Language" },
+  { value: "C#", label: "Main Language" },
   { value: "Unity", label: "Main Engine" },
+  { value: "VR", label: "Focus Area" },
+  { value: "FitVR", label: "Current Project" },
 ];
 
 export const socials = [

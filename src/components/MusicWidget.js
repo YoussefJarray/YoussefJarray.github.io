@@ -53,14 +53,14 @@ export default function MusicWidget() {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    const tryPlay = () => { a.play().catch(() => {}); a.volume = muted ? 0 : volume * duckVolume; };
+    const tryPlay = () => { a.play().catch(() => {}); a.volume = Math.max(0, Math.min(1, muted ? 0 : volume * duckVolume)); };
     if (a.readyState >= 2) tryPlay();
     else { a.addEventListener("canplay", tryPlay, { once: true }); }
   }, []);
 
   useEffect(() => {
     const a = audioRef.current;
-    if (a && !fadingRef.current) a.volume = muted ? 0 : volume * duckVolume;
+    if (a && !fadingRef.current) a.volume = Math.max(0, Math.min(1, muted ? 0 : volume * duckVolume));
   }, [volume, muted, duckVolume]);
 
   const loadTrack = useCallback((idx) => {

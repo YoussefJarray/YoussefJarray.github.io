@@ -1,14 +1,9 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from "react";
-
-function getCellClass(i) {
-  if (i === 0) return "hero";
-  if (i === 2) return "tall";
-  return "normal";
-}
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 export default function PhotosApp() {
   const [photos, setPhotos] = useState(null);
+  const [filter, setFilter] = useState("all");
   const [lbIdx, setLbIdx] = useState(null);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -23,6 +18,17 @@ export default function PhotosApp() {
       .catch(() => setPhotos([]));
   }, []);
 
+  const cats = useMemo(() => {
+    if (!photos) return [];
+    const set = new Set(photos.map((p) => p.cat));
+    return ["all", ...Array.from(set).sort()];
+  }, [photos]);
+
+  const filtered = useMemo(() => {
+    if (!photos) return [];
+    return filter === "all" ? photos : photos.filter((p) => p.cat === filter);
+  }, [photos, filter]);
+
   const closeLb = useCallback(() => {
     setLbIdx(null);
     setZoom(1);
@@ -31,15 +37,15 @@ export default function PhotosApp() {
 
   const navLb = useCallback(
     (dir) => {
-      if (!photos) return;
+      if (!filtered) return;
       setZoom(1);
       setPan({ x: 0, y: 0 });
-      setLbIdx((prev) => (prev + dir + photos.length) % photos.length);
+      setLbIdx((prev) => (prev + dir + filtered.length) % filtered.length);
     },
-    [photos]
+    [filtered]
   );
 
-  const changeZoom = useCallback((delta, origin = null) => {
+  const changeZoom = useCallback((delta) => {
     setZoom((prev) => {
       const next = Math.min(4, Math.max(1, prev + delta));
       if (next === 1) setPan({ x: 0, y: 0 });
@@ -47,7 +53,6 @@ export default function PhotosApp() {
     });
   }, []);
 
-  // Keyboard
   useEffect(() => {
     if (lbIdx === null) return;
     const handler = (e) => {
@@ -62,13 +67,11 @@ export default function PhotosApp() {
     return () => window.removeEventListener("keydown", handler);
   }, [lbIdx, closeLb, navLb, changeZoom]);
 
-  // Scroll to zoom
   const handleWheel = useCallback((e) => {
     e.preventDefault();
     changeZoom(e.deltaY < 0 ? 0.25 : -0.25);
   }, [changeZoom]);
 
-  // Drag to pan
   const onMouseDown = (e) => {
     if (zoom <= 1) return;
     e.preventDefault();
@@ -102,34 +105,58 @@ export default function PhotosApp() {
   }
 
   return (
-    <div className="h-full flex flex-col overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-
-      {/* Header */}
+    <div className="h-full flex overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      {/* Sidebar */}
       <div
-        className="flex items-center justify-between px-4 shrink-0"
-        style={{ borderBottom: "0.5px solid var(--border)", height: 40 }}
+        className="flex flex-col shrink-0 overflow-y-auto"
+        style={{ width: 170, borderRight: "0.5px solid var(--border)", padding: "12px 0" }}
       >
-        <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>
-          Photos
+        <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", padding: "0 14px 10px" }}>
+          Library
         </span>
-        <span style={{ fontSize: 10, color: "var(--text-dim, rgba(240,240,240,0.28))" }}>
-          {photos.length} {photos.length === 1 ? "photo" : "photos"}
-        </span>
+        {cats.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => { setFilter(cat); setLbIdx(null); }}
+            className="text-left"
+            style={{
+              padding: "7px 14px",
+              fontSize: 12,
+              color: filter === cat ? "var(--accent)" : "var(--text-secondary)",
+              background: filter === cat ? "var(--accent-light)" : "transparent",
+              borderRight: filter === cat ? "2px solid var(--accent)" : "2px solid transparent",
+              fontWeight: filter === cat ? 600 : 400,
+              transition: "all 0.15s",
+            }}
+          >
+            {cat === "all" ? "All Photos" : cat}
+          </button>
+        ))}
       </div>
 
-      {/* Grid — constrained height so it never overflows the window */}
-      <div className="flex-1 overflow-auto" style={{ padding: 14 }}>
+      {/* Main content */}
+      <div className="flex flex-col flex-1 min-w-0">
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gridAutoRows: "140px",
-            gap: 10,
-          }}
+          className="flex items-center justify-between px-4 shrink-0"
+          style={{ borderBottom: "0.5px solid var(--border)", height: 40 }}
         >
-          {photos.map((photo, i) => {
-            const kind = getCellClass(i);
-            return (
+          <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>
+            {filter === "all" ? "All Photos" : filter}
+          </span>
+          <span style={{ fontSize: 10, color: "var(--text-dim, rgba(240,240,240,0.28))" }}>
+            {filtered.length} {filtered.length === 1 ? "photo" : "photos"}
+          </span>
+        </div>
+
+        <div className="flex-1 overflow-auto" style={{ padding: 14 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+              gap: 10,
+            }}
+          >
+            {filtered.map((photo, i) => (
               <button
                 key={photo.src}
                 onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); setLbIdx(i); }}
@@ -137,10 +164,9 @@ export default function PhotosApp() {
                 style={{
                   position: "relative",
                   overflow: "hidden",
-                  borderRadius: kind === "hero" ? 14 : 12,
+                  borderRadius: 10,
                   background: "rgba(255,255,255,0.04)",
-                  gridColumn: kind === "hero" ? "1 / 3" : undefined,
-                  gridRow: kind === "hero" ? "span 2" : kind === "tall" ? "span 2" : "span 1",
+                  aspectRatio: "1 / 1",
                   border: "0.5px solid var(--border)",
                   cursor: "pointer",
                   padding: 0,
@@ -159,8 +185,6 @@ export default function PhotosApp() {
                   }}
                   className="group-hover:scale-105 group-hover:brightness-75"
                 />
-
-                {/* Hover overlay */}
                 <div
                   style={{
                     position: "absolute",
@@ -171,55 +195,22 @@ export default function PhotosApp() {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "flex-end",
-                    padding: "12px 14px",
+                    padding: "10px 12px",
                   }}
                   className="group-hover:opacity-100"
                 >
-                  <p style={{ margin: 0, fontSize: 13, color: "#fff", fontFamily: "'DM Serif Display', serif", lineHeight: 1.2 }}>
+                  <p style={{ margin: 0, fontSize: 11, color: "#fff", lineHeight: 1.2 }}>
                     {photo.title}
                   </p>
                 </div>
-
-                {/* Index badge */}
-                <span
-                  style={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    fontSize: 10,
-                    color: "rgba(255,255,255,0.35)",
-                    background: "rgba(0,0,0,0.3)",
-                    padding: "2px 6px",
-                    borderRadius: 100,
-                    opacity: 0,
-                    transition: "opacity 0.2s",
-                  }}
-                  className="group-hover:opacity-100"
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-
-                {/* Accent sweep */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    height: 2,
-                    width: 0,
-                    background: "var(--accent)",
-                    transition: "width 0.35s cubic-bezier(0.22,1,0.36,1)",
-                  }}
-                  className="group-hover:w-full"
-                />
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Lightbox */}
-      {lbIdx !== null && (
+      {lbIdx !== null && filtered.length > 0 && (
         <div
           style={{
             position: "fixed",
@@ -234,7 +225,6 @@ export default function PhotosApp() {
           }}
           onClick={closeLb}
         >
-          {/* Image area */}
           <div
             style={{
               position: "relative",
@@ -255,8 +245,8 @@ export default function PhotosApp() {
           >
             <img
               ref={imgRef}
-              src={photos[lbIdx].src}
-              alt={photos[lbIdx].title}
+              src={filtered[lbIdx].src}
+              alt={filtered[lbIdx].title}
               draggable={false}
               style={{
                 maxWidth: "calc(100% - 80px)",
@@ -273,17 +263,13 @@ export default function PhotosApp() {
             />
           </div>
 
-          {/* Bottom bar */}
           <div
             style={{ width: "100%", padding: "12px 20px 16px", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Prev */}
             <NavBtn onClick={() => navLb(-1)} aria-label="Previous">←</NavBtn>
-
-            {/* Dots */}
             <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              {photos.map((_, di) => (
+              {filtered.map((_, di) => (
                 <div
                   key={di}
                   onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); setLbIdx(di); }}
@@ -298,14 +284,8 @@ export default function PhotosApp() {
                 />
               ))}
             </div>
-
-            {/* Next */}
             <NavBtn onClick={() => navLb(1)} aria-label="Next">→</NavBtn>
-
-            {/* Divider */}
             <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.1)", margin: "0 4px" }} />
-
-            {/* Zoom controls */}
             <NavBtn onClick={() => changeZoom(-0.5)} aria-label="Zoom out" disabled={zoom <= 1}>−</NavBtn>
             <span
               style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", minWidth: 36, textAlign: "center", cursor: "pointer" }}
@@ -316,19 +296,17 @@ export default function PhotosApp() {
             <NavBtn onClick={() => changeZoom(0.5)} aria-label="Zoom in" disabled={zoom >= 4}>+</NavBtn>
           </div>
 
-          {/* Title */}
           <div
             style={{ position: "absolute", bottom: 56, left: 0, right: 0, textAlign: "center", pointerEvents: "none" }}
           >
-            <p style={{ margin: 0, fontSize: 15, color: "#f0f0f0", fontFamily: "'DM Serif Display', serif", letterSpacing: "-0.01em" }}>
-              {photos[lbIdx].title}
+            <p style={{ margin: 0, fontSize: 15, color: "#f0f0f0", fontFamily: "'DM Sans', sans-serif", letterSpacing: "-0.01em" }}>
+              {filtered[lbIdx].title}
             </p>
             <p style={{ margin: "4px 0 0", fontSize: 11, color: "rgba(240,240,240,0.35)", letterSpacing: "0.06em" }}>
-              {String(lbIdx + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}
+              {String(lbIdx + 1).padStart(2, "0")} / {String(filtered.length).padStart(2, "0")}
             </p>
           </div>
 
-          {/* Close */}
           <button
             onClick={closeLb}
             aria-label="Close"

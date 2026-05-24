@@ -154,31 +154,8 @@ export default function SettingsApp() {
         {activeSection === "system" && (
           <div>
             <h2 className="text-sm font-semibold text-primary mb-4">System</h2>
-            <div className="rounded-xl border border-subtle divide-y divide-subtle" style={{ background: "var(--bg-surface)" }}>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Portfolio Version</p>
-                  <p className="text-[10px] text-muted mt-0.5">v2.0 — Desktop Edition</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Engine</p>
-                  <p className="text-[10px] text-muted mt-0.5">Next.js + Zustand + Tailwind</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Wallpaper Detection</p>
-                  <p className="text-[10px] text-muted mt-0.5">Auto (canvas luminance)</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Animations</p>
-                  <p className="text-[10px] text-muted mt-0.5">Framer Motion spring physics</p>
-                </div>
-              </div>
+            <div className="rounded-xl border border-subtle p-4" style={{ background: "var(--bg-surface)" }}>
+              <p className="text-xs text-secondary">Wallpapers sourced from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="font-medium" style={{ color: "var(--accent)" }}>Unsplash</a>.</p>
             </div>
           </div>
         )}
@@ -186,33 +163,10 @@ export default function SettingsApp() {
         {activeSection === "about" && (
           <div>
             <h2 className="text-sm font-semibold text-primary mb-4">About</h2>
-            <div className="flex flex-col items-center text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 via-rose-500 to-purple-500 flex items-center justify-center text-xl font-bold text-white mb-3">
-                YJ
-              </div>
-              <h3 className="text-sm font-semibold text-primary">Youssef Jarray</h3>
-              <p className="text-[10px] text-muted mt-0.5">Software Engineering Student</p>
-              <p className="text-[9px] text-muted mt-0.5">EPI · VR & Game Engineering</p>
-            </div>
-            <div className="rounded-xl border border-subtle divide-y divide-subtle" style={{ background: "var(--bg-surface)" }}>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Author</p>
-                  <p className="text-[10px] text-muted mt-0.5">Youssef Jarray</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Purpose</p>
-                  <p className="text-[10px] text-muted mt-0.5">Showcasing projects & skills</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-4 py-3">
-                <div>
-                  <p className="text-xs text-secondary">Built With</p>
-                  <p className="text-[10px] text-muted mt-0.5">Next.js · Zustand · Tailwind</p>
-                </div>
-              </div>
+            <div className="rounded-xl border border-subtle p-4" style={{ background: "var(--bg-surface)" }}>
+              <p className="text-xs text-secondary leading-relaxed">
+                All rights for assets used belong to their respective owners.
+              </p>
             </div>
           </div>
         )}

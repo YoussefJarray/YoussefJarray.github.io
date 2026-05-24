@@ -173,6 +173,7 @@ export default function Window({ id, title, icon, children }) {
             borderBottom: "1px solid var(--border)",
           }}
           onMouseDown={handleMouseDown}
+          onDoubleClick={() => toggleMaximize(id)}
         >
           <div className="flex items-center gap-2.5 text-sm min-w-0" style={{ color: "var(--text-muted)" }}>
             <span className="text-xs shrink-0">{appIcons[icon] || "\uD83D\uDCC4"}</span>
