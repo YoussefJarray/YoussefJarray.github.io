@@ -2,9 +2,10 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useWindowStore } from "../store/windowStore";
 import { useAudioStore } from "../store/audioStore";
-import { FiWifi, FiWifiOff, FiVolume2, FiVolume1, FiVolumeX, FiSearch, FiStar, FiMonitor, FiTerminal, FiGlobe, FiImage } from "react-icons/fi";
+import { FiWifi, FiWifiOff, FiVolume2, FiVolume1, FiVolumeX, FiSearch, FiStar, FiMonitor, FiTerminal, FiGlobe, FiImage, FiPlay } from "react-icons/fi";
 import { FaUbuntu, FaCog, FaPowerOff } from "react-icons/fa";
 import ContextMenu from "./ContextMenu";
+import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon } from "./icons/GameIcons";
 
 const confettiColors = ["#f97316", "#ef4444", "#34d399", "#3b82f6", "#a855f7", "#fbbf24", "#ec4899"];
 
@@ -57,6 +58,10 @@ const appIcons = {
   settings: "\u2699\uFE0F",
   browser: "\uD83C\uDF10",
   photos: "\uD83D\uDDBC",
+  doom: <DoomIcon size={14} />,
+  pong: <PongIcon size={14} />,
+  tictactoe: <TicTacToeIcon size={14} />,
+  sudoku: <SudokuIcon size={14} />,
 };
 
 const categories = [
@@ -64,6 +69,7 @@ const categories = [
   { id: "development", label: "Development", icon: FiTerminal },
   { id: "internet", label: "Internet", icon: FiGlobe },
   { id: "graphics", label: "Graphics", icon: FiImage },
+  { id: "games", label: "Games", icon: FiPlay },
   { id: "system", label: "System", icon: FiMonitor },
 ];
 
@@ -73,6 +79,8 @@ const appsByCategory = {
     { id: "terminal", icon: "\u276F_", label: "Terminal", desc: "Command line" },
     { id: "browser", icon: "\uD83C\uDF10", label: "Web Browser", desc: "Browse the web" },
     { id: "photos", icon: "\uD83D\uDDBC", label: "Photos", desc: "Image gallery" },
+    { id: "doom", icon: <DoomIcon size={22} />, label: "Doom", desc: "Raycasting FPS" },
+    { id: "pong", icon: <PongIcon size={22} />, label: "Pong", desc: "Classic paddle ball" },
   ],
   development: [
     { id: "terminal", icon: "\u276F_", label: "Terminal", desc: "Command line" },
@@ -80,6 +88,12 @@ const appsByCategory = {
   ],
   internet: [{ id: "browser", icon: "\uD83C\uDF10", label: "Web Browser", desc: "Browse the web" }],
   graphics: [{ id: "photos", icon: "\uD83D\uDDBC", label: "Photos", desc: "Image gallery" }],
+  games: [
+    { id: "doom", icon: <DoomIcon size={22} />, label: "Doom", desc: "Raycasting FPS" },
+    { id: "pong", icon: <PongIcon size={22} />, label: "Pong", desc: "Classic paddle ball" },
+    { id: "tictactoe", icon: <TicTacToeIcon size={22} />, label: "Tic-Tac-Toe", desc: "3-in-a-row" },
+    { id: "sudoku", icon: <SudokuIcon size={22} />, label: "Sudoku", desc: "Number puzzle" },
+  ],
   system: [
     { id: "settings", icon: "\u2699\uFE0F", label: "Settings", desc: "Preferences" },
     { id: "about", icon: "\uD83D\uDC64", label: "About Me", desc: "Personal info" },
@@ -229,7 +243,7 @@ function CalendarPopup({ onClose }) {
 
 function SystemTrayPopup({ title, children, onClose }) {
   return (
-    <div className="absolute top-full mt-2 z-[200]" onClick={(e) => e.stopPropagation()} style={{ right: 0 }}>
+    <div className="absolute top-full mt-2 z-[200]" data-tray-popup style={{ right: 0 }}>
       <div className="rounded-xl shadow-2xl border border-subtle overflow-hidden p-3" style={{ width: 220, background: "var(--menu-bg)", backdropFilter: "blur(30px)" }}>
         <div className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-2">{title}</div>
         {children}
@@ -254,9 +268,13 @@ export default function TopPanel() {
     setShowBattery(false);
   }, []);
 
+  const trayRef = useRef(null);
+
   useEffect(() => {
     if (!showCalendar && !showVolume && !showWifi && !showBattery) return;
-    const handler = () => closeAllPopups();
+    const handler = (e) => {
+      if (!trayRef.current || !trayRef.current.contains(e.target)) closeAllPopups();
+    };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [showCalendar, showVolume, showWifi, showBattery, closeAllPopups]);
@@ -363,10 +381,13 @@ export default function TopPanel() {
                 }}
                 onMouseLeave={() => { if (previewTimer.current) clearTimeout(previewTimer.current); setHoverPreview(null); }}
                 className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all duration-150 text-[11px] shrink-0 btn-hover relative ${
-                  isActive ? "bg-white/20 text-white font-medium" : isMin ? "opacity-30 hover:opacity-60 hover:bg-white/5" : "opacity-50 hover:opacity-80 hover:bg-white/5"
+                  isActive ? "bg-white/25 text-white font-semibold shadow-sm" : isMin ? "opacity-30 hover:opacity-60 hover:bg-white/5" : "opacity-50 hover:opacity-80 hover:bg-white/5"
                 }`}
                 style={{ borderBottom: isActive ? "2px solid var(--accent)" : "2px solid transparent", color: "var(--panel-text)" }}
               >
+                {isActive && (
+                  <div className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full" style={{ background: "var(--accent)" }} />
+                )}
                 <span className="text-xs">{appIcons[w.icon] || "\uD83D\uDCC4"}</span>
                 <span className="truncate max-w-[100px]">{w.title}</span>
               </button>
@@ -399,7 +420,7 @@ export default function TopPanel() {
         )}
 
         {/* ── RIGHT: system tray ── */}
-        <div className="flex items-center gap-0.5 shrink-0 ml-auto" style={{ color: "var(--panel-text-secondary)" }}>
+        <div ref={trayRef} className="flex items-center gap-0.5 shrink-0 ml-auto" style={{ color: "var(--panel-text-secondary)" }}>
           {/* avatar */}
           <button
             onClick={(e) => { const rect = e.currentTarget.getBoundingClientRect(); spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2); }}

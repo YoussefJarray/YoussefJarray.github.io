@@ -5,11 +5,11 @@ const bootLines = [
   "BIOS: Starting UEFI firmware...",
   "EFI: Loading bootloader...",
   "BOOT: Verifying kernel image...",
-  "KERNEL: Decompressing Linux 6.8.0...",
+  "KERNEL: Decompressing YuOS...",
   "KERNEL: Mounting root filesystem...",
   "SYSTEMD: Starting user manager...",
-  "DISPLAY: Initializing GPU (NVIDIA RTX 4070)...",
-  "DISPLAY: Starting Wayland compositor...",
+  "DISPLAY: Initializing GPU (POTATO GPU)...",
+  "DISPLAY: Starting compositor...",
   "SESSION: Loading YUKI Desktop Environment...",
   "SESSION: Ready.",
 ];
@@ -52,7 +52,7 @@ export default function BootScreen({ onFinish }) {
           YJ
         </div>
         <h1 className="text-lg font-semibold text-white/80 tracking-wide">YUKI OS</h1>
-        <p className="text-[10px] text-white/20 mt-1">Linux 6.8.0-arch1-1</p>
+        <p className="text-[10px] text-white/20 mt-1">YuOS v0.15</p>
       </div>
 
       <div className="w-72 mb-4">

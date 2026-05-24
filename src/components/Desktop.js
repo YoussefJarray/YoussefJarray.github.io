@@ -18,9 +18,13 @@ import BrowserApp from "./BrowserApp";
 import PhotosApp from "./PhotosApp";
 import MarkdownViewer from "./MarkdownViewer";
 import DesktopWidgets from "./DesktopWidgets";
+import TicTacToe from "./TicTacToe";
+import Sudoku from "./Sudoku";
+import Pong from "./Pong";
+import Doom from "./Doom";
 
 const appComponents = {
-  FileManager, Terminal, AboutApp, SettingsApp, BrowserApp, PhotosApp, MarkdownViewer,
+  FileManager, Terminal, AboutApp, SettingsApp, BrowserApp, PhotosApp, MarkdownViewer, TicTacToe, Sudoku, Pong, Doom,
 };
 
 function hexToRgb(hex) {

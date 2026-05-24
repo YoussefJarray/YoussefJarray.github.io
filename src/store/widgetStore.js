@@ -4,12 +4,12 @@ const STORAGE_KEY = "portfolio-widget-state";
 
 function getDefaultWidgets() {
   const rx = typeof window !== "undefined" ? window.innerWidth - 224 : 1200;
-  const musicX = typeof window !== "undefined" ? window.innerWidth - 290 : 1130;
+  const ww = typeof window !== "undefined" ? window.innerWidth : 1400;
   return {
     clock: { enabled: true, x: rx, y: 60 },
-    sticky: { enabled: true, x: rx, y: 220 },
-    cat: { enabled: true, x: rx, y: 370 },
-    music: { enabled: false, x: musicX, y: 520 },
+    sticky: { enabled: true, x: rx - 220, y: 60 },
+    cat: { enabled: true, x: rx, y: 200 },
+    music: { enabled: true, x: Math.max(0, ww / 2 - 132), y: typeof window !== "undefined" ? window.innerHeight - 260 : 500 },
   };
 }
 

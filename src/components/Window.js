@@ -3,6 +3,7 @@ import { useRef, useCallback, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useWindowStore } from "../store/windowStore";
 import { FiX, FiMinus, FiSquare } from "react-icons/fi";
+import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon } from "./icons/GameIcons";
 
 const appIcons = {
   folder: "\uD83D\uDCC1",
@@ -10,6 +11,10 @@ const appIcons = {
   user: "\uD83D\uDC64",
   settings: "\u2699\uFE0F",
   browser: "\uD83C\uDF10",
+  doom: <DoomIcon size={14} />,
+  pong: <PongIcon size={14} />,
+  tictactoe: <TicTacToeIcon size={14} />,
+  sudoku: <SudokuIcon size={14} />,
   photos: (
     <svg viewBox="0 0 24 24" width="16" height="16" fill="white" stroke="black" strokeWidth="1.5" className="shrink-0">
       <rect x="2" y="3" width="20" height="18" rx="2" />

@@ -44,7 +44,7 @@ export default function MusicWidget() {
   const audioRef = useRef(null);
   const playingRef = useRef(false);
   const fadingRef = useRef(false);
-  const { volume, muted, setVolume, setMuted } = useAudioStore();
+  const { volume, muted, duckVolume, setVolume, setMuted } = useAudioStore();
   const [, forceRender] = useState(0);
 
   const track = tracks[currentIdx];
@@ -53,15 +53,15 @@ export default function MusicWidget() {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    const tryPlay = () => { a.play().catch(() => {}); a.volume = muted ? 0 : volume; };
+    const tryPlay = () => { a.play().catch(() => {}); a.volume = muted ? 0 : volume * duckVolume; };
     if (a.readyState >= 2) tryPlay();
     else { a.addEventListener("canplay", tryPlay, { once: true }); }
   }, []);
 
   useEffect(() => {
     const a = audioRef.current;
-    if (a && !fadingRef.current) a.volume = muted ? 0 : volume;
-  }, [volume, muted]);
+    if (a && !fadingRef.current) a.volume = muted ? 0 : volume * duckVolume;
+  }, [volume, muted, duckVolume]);
 
   const loadTrack = useCallback((idx) => {
     const a = audioRef.current;
@@ -93,7 +93,7 @@ export default function MusicWidget() {
       };
       a.addEventListener("canplay", tryPlay);
       setTimeout(() => {
-        fadeVolume(a, 0, muted ? 0 : volume, fadeTime);
+        fadeVolume(a, 0, muted ? 0 : volume * duckVolume, fadeTime);
         setTimeout(() => { fadingRef.current = false; }, fadeTime * 1000 + 50);
       }, 150);
     }, a.currentTime > 0 ? fadeTime * 1000 + 50 : 0);

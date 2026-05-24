@@ -1,6 +1,6 @@
 "use client";
 import { useWindowStore } from "../store/windowStore";
-import { FiFolder, FiTerminal, FiUser, FiSettings, FiGlobe } from "react-icons/fi";
+import { FiFolder, FiTerminal, FiUser, FiSettings, FiGlobe, FiMonitor } from "react-icons/fi";
 
 const dockApps = [
   { id: "files", icon: FiFolder, label: "Files" },
@@ -8,6 +8,7 @@ const dockApps = [
   { id: "about", icon: FiUser, label: "About" },
   { id: "browser", icon: FiGlobe, label: "Browser" },
   { id: "settings", icon: FiSettings, label: "Settings" },
+  { id: "doom", icon: FiMonitor, label: "Doom" },
 ];
 
 export default function BottomPanel() {

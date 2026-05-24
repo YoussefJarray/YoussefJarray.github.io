@@ -8,6 +8,10 @@ const defaultApps = [
   { id: "browser", title: "Web Browser", icon: "browser", app: "BrowserApp", x: 80, y: 10, w: 920, h: 580 },
   { id: "photos", title: "Photos", icon: "photos", app: "PhotosApp", x: 120, y: 30, w: 800, h: 520 },
   { id: "markdown", title: "Markdown Viewer", icon: "file", app: "MarkdownViewer", x: 120, y: 30, w: 600, h: 460 },
+  { id: "tictactoe", title: "Tic-Tac-Toe", icon: "tictactoe", app: "TicTacToe", x: 200, y: 60, w: 320, h: 380 },
+  { id: "sudoku", title: "Sudoku", icon: "sudoku", app: "Sudoku", x: 250, y: 80, w: 360, h: 440 },
+  { id: "pong", title: "Pong", icon: "pong", app: "Pong", x: 150, y: 40, w: 680, h: 500 },
+  { id: "doom", title: "Doom", icon: "doom", app: "Doom", x: 100, y: 30, w: 680, h: 500 },
 ];
 
 const buildInitial = () => {

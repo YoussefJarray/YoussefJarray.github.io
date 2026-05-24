@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useWindowStore } from "../store/windowStore";
 import { useIconStore } from "../store/iconStore";
 import ContextMenu from "./ContextMenu";
+import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon } from "./icons/GameIcons";
 
 function PhotosIcon({ wallpaperDark }) {
   const stroke = wallpaperDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)";
@@ -16,6 +17,14 @@ function PhotosIcon({ wallpaperDark }) {
   );
 }
 
+const customIcons = {
+  photos: (dark) => <PhotosIcon wallpaperDark={dark} />,
+  doom: () => <DoomIcon size={28} />,
+  pong: () => <PongIcon size={28} />,
+  tictactoe: () => <TicTacToeIcon size={28} />,
+  sudoku: () => <SudokuIcon size={28} />,
+};
+
 const desktopItems = [
   { id: "files", icon: "\uD83D\uDCC1", label: "Projects" },
   { id: "terminal", icon: ">_", label: "Terminal" },
@@ -23,6 +32,10 @@ const desktopItems = [
   { id: "browser", icon: "\uD83C\uDF10", label: "Web Browser" },
   { id: "photos", icon: "custom-photos", label: "Photos" },
   { id: "settings", icon: "\u2699\uFE0F", label: "Settings" },
+  { id: "doom", icon: "custom-doom", label: "Doom" },
+  { id: "pong", icon: "custom-pong", label: "Pong" },
+  { id: "tictactoe", icon: "custom-tictactoe", label: "Tic-Tac-Toe" },
+  { id: "sudoku", icon: "custom-sudoku", label: "Sudoku" },
 ];
 
 function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, selected, onSelect }) {
@@ -107,9 +120,9 @@ function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, s
         setDragging(true);
       }}
     >
-      {icon === "custom-photos" ? (
+      {typeof icon === "string" && icon.startsWith("custom-") ? (
         <span className="flex items-center justify-center select-none pointer-events-none" style={{ width: 36, height: 36, filter: iconFilter }}>
-          <PhotosIcon wallpaperDark={wallpaperDark} />
+          {customIcons[icon.slice(7)]?.(wallpaperDark)}
         </span>
       ) : (
         <span

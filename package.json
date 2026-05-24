@@ -5,7 +5,7 @@
   "scripts": {
     "start": "next start",
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/generate-photos-index.mjs && next build",
     "lint": "next lint"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
+    "wasm-doom": "^1.2.0",
     "zustand": "^5.0.13"
   },
   "devDependencies": {
