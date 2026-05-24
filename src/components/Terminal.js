@@ -55,28 +55,52 @@ Location: Sousse, Tunisia`,
 
   help: helpText,
 
-  neofetch: `
-         .-/+oossssoo+/-.               yuki@portfolio
+  neofetch() {
+    const ua = navigator.userAgent;
+    const platform = navigator.platform || "unknown";
+    const cores = navigator.hardwareConcurrency || "?";
+    const mem = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "?";
+    const res = `${screen.width}x${screen.height}`;
+    const host = window.location.hostname;
+    const lang = navigator.language || "?";
+    const uptime = Math.floor(performance.now() / 1000);
+    const h = Math.floor(uptime / 3600);
+    const m = Math.floor((uptime % 3600) / 60);
+    const s = uptime % 60;
+
+    let browser = "Unknown";
+    if (ua.includes("Firefox")) browser = "Firefox";
+    else if (ua.includes("Edg")) browser = "Edge";
+    else if (ua.includes("Chrome")) browser = "Chromium";
+
+    let os = platform;
+    if (ua.includes("Windows")) os = `Windows ${ua.includes("Win64") ? "x64" : "x86"}`;
+    else if (ua.includes("Mac")) os = "macOS";
+    else if (ua.includes("Linux")) os = "Linux";
+
+    return `
+         .-/+oossssoo+/-.               yuki@${host}
        \`:+ssssssssssssssssss+:\`             ------------------------
-     -+ssssssssssssssssssyyssss+-           OS: GNOME Linux 6.1 x86_64
-   .ossssssssssssssssssdMMMNysssso.         Host: Portfolio Laptop
-  /ssssssssssshdmmNNmmyNMMMMhssssss/        Kernel: 6.1.0-portfolio
- +ssssssssshmydMMMMMMMNddddyssssssss+       Uptime: 3 hours, 42 mins
-/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/      Packages: 420 (pacman)
-.ssssssssdMMMNhsssssssssshNMMMdssssss.      Shell: bash 5.2.15
-+sssshhhyNMMNyssssssssssssyNMMMysssss+      Resolution: 1920x1080
-ossyNMMMNyMMhsssssssssssssshmmmhssssso      DE: GNOME 44.2
-ossyNMMMNyMMhsssssssssssssshmmmhssssso      Terminal: gnome-terminal
-+sssshhhyNMMNyssssssssssssyNMMMysssss+      CPU: Intel Core i7-13700K
-.ssssssssdMMMNhsssssssssshNMMMdssssss.      GPU: NVIDIA RTX 4070
- /sssssssshNMMMyhhyyyyhdNMMMNhssssss/       Memory: 3242MiB / 16000MiB
+     -+ssssssssssssssssssyyssss+-           OS: ${os}
+   .ossssssssssssssssssdMMMNysssso.         Host: ${host}
+  /ssssssssssshdmmNNmmyNMMMMhssssss/        Browser: ${browser}
+ +ssssssssshmydMMMMMMMNddddyssssssss+       Uptime: ${h}h ${m}m ${s}s
+/sssssssshNMMMyhhyyyyhmNMMMNhssssssss/      Language: ${lang}
+.ssssssssdMMMNhsssssssssshNMMMdssssss.      Resolution: ${res}
++sssshhhyNMMNyssssssssssssyNMMMysssss+      CPU Cores: ${cores}
+ossyNMMMNyMMhsssssssssssssshmmmhssssso      Memory: ${mem}
+ossyNMMMNyMMhsssssssssssssshmmmhssssso      Platform: ${platform}
++sssshhhyNMMNyssssssssssssyNMMMysssss+      
+.ssssssssdMMMNhsssssssssshNMMMdssssss.      
+ /sssssssshNMMMyhhyyyyhdNMMMNhssssss/       
   +sssssssssdmydMMMMMMMMddddyssssssss+
    /ssssssssssshdmNNNNmyNMMMMhssssss/
     .ossssssssssssssssssdMMMNysssso.
       -+sssssssssssssssssyyyssss+-
         \`:+ssssssssssssssssss+:\`
            .-/+oossssoo+/-.
-`.trimStart(),
+`.trimStart();
+  },
 };
 
 export default function Terminal() {
@@ -102,7 +126,8 @@ export default function Terminal() {
       setHistory([]);
       return;
     }
-    const response = commands[trimmed];
+    let response = commands[trimmed];
+    if (typeof response === "function") response = response();
     const output = response
       ? response
       : `bash: ${trimmed}: command not found. Type 'help' for available commands.`;
