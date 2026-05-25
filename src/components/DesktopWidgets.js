@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 import { useWidgetStore } from "../store/widgetStore";
 import { useThemeStore } from "../store/themeStore";
 import { useSettingsStore } from "../store/settingsStore";
@@ -105,8 +106,8 @@ function StickyNote() {
           }}
         >
           <p style={{ textAlign: "center", fontFamily: "'Segoe UI', 'Comic Sans MS', cursive, sans-serif", color: "#1a1a24", fontSize: 11, lineHeight: 1.5 }}>
-            Made By<br/>
-            <strong style={{ fontSize: 13 }}>Youssef Jarray</strong>
+            TIP:<br/>
+            <strong style={{ fontSize: 13 }}>Check out my Projects!</strong>
           </p>
         </div>
 
@@ -201,6 +202,8 @@ function DraggableWidget({ id, children, defaultPos, wallpaperDark, onContextMen
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const dragRef = useRef(null);
   const lastPos = useRef(defaultPos);
+  const widgetRef = useRef(null);
+  const hoverTween = useRef(null);
 
   useEffect(() => { lastPos.current = defaultPos; }, [defaultPos.x, defaultPos.y]);
 
@@ -237,7 +240,9 @@ function DraggableWidget({ id, children, defaultPos, wallpaperDark, onContextMen
 
   return (
     <div
-      className={`absolute pointer-events-auto transition-all duration-200 ${noGlass ? "" : "rounded-2xl p-4 border backdrop-blur-xl"}`}
+      ref={widgetRef}
+      data-gsap="widget"
+      className={`absolute pointer-events-auto ${noGlass ? "" : "rounded-2xl p-4 border backdrop-blur-xl"}`}
       style={{
         left: dragging ? defaultPos.x + offset.x : defaultPos.x,
         top: dragging ? defaultPos.y + offset.y : defaultPos.y,
@@ -256,6 +261,8 @@ function DraggableWidget({ id, children, defaultPos, wallpaperDark, onContextMen
         if (e.button !== 0) return;
         if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
         e.preventDefault();
+        hoverTween.current?.kill();
+        gsap.to(widgetRef.current, { scale: 0.97, duration: 0.1, ease: "power2.out" });
         dragRef.current = { startX: e.clientX, startY: e.clientY, startPosX: defaultPos.x, startPosY: defaultPos.y, active: false };
         setOffset({ x: 0, y: 0 });
         setArmed(true);

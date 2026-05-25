@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const defaultApps = [
-  { id: "files", title: "Files", icon: "folder", app: "FileManager", x: 60, y: 20, w: 820, h: 520 },
+  { id: "files", title: "Projects", icon: "folder", app: "FileManager", x: 60, y: 20, w: 820, h: 520 },
   { id: "terminal", title: "Terminal", icon: "terminal", app: "Terminal", x: 100, y: 40, w: 700, h: 440 },
   { id: "about", title: "About Me", icon: "user", app: "AboutApp", x: 140, y: 30, w: 620, h: 480 },
   { id: "settings", title: "Settings", icon: "settings", app: "SettingsApp", x: 180, y: 40, w: 580, h: 480 },
@@ -10,20 +10,28 @@ const defaultApps = [
   { id: "markdown", title: "Markdown Viewer", icon: "file", app: "MarkdownViewer", x: 120, y: 30, w: 600, h: 460 },
   { id: "tictactoe", title: "Tic-Tac-Toe", icon: "tictactoe", app: "TicTacToe", x: 200, y: 60, w: 320, h: 380 },
   { id: "sudoku", title: "Sudoku", icon: "sudoku", app: "Sudoku", x: 250, y: 80, w: 360, h: 440 },
+  { id: "snake", title: "Snake", icon: "snake", app: "Snake", x: 200, y: 50, w: 400, h: 450 },
+  { id: "breakout", title: "Breakout", icon: "breakout", app: "Breakout", x: 150, y: 40, w: 500, h: 480 },
   { id: "pong", title: "Pong", icon: "pong", app: "Pong", x: 150, y: 40, w: 680, h: 500 },
   { id: "doom", title: "Doom", icon: "doom", app: "Doom", x: 100, y: 30, w: 680, h: 500 },
   { id: "resume", title: "Resume", icon: "pdf", app: "PdfViewer", x: 236, y: 60, w: 680, h: 600 },
+  { id: "calculator", title: "Calculator", icon: "calculator", app: "CalculatorApp", x: 300, y: 100, w: 300, h: 400, noMaximize: true },
+  { id: "minesweeper", title: "Minesweeper", icon: "minesweeper", app: "MinesweeperApp", x: 180, y: 50, w: 320, h: 400 },
+  { id: "githubstats", title: "GitHub Stats", icon: "githubstats", app: "GitHubStatsApp", x: 200, y: 50, w: 600, h: 460 },
+  { id: "memory", title: "Memory", icon: "memory", app: "MemoryApp", x: 220, y: 80, w: 360, h: 420 },
+  { id: "paint", title: "Paint", icon: "paint", app: "PaintApp", x: 100, y: 30, w: 800, h: 560 },
+  { id: "typing", title: "Typing Test", icon: "typing", app: "MonkeyTypeApp", x: 350, y: 120, w: 600, h: 350 },
 ];
 
 const buildInitial = () => {
   const w = {};
   defaultApps.forEach((a) => {
-    w[a.id] = {
-      id: a.id, title: a.title, icon: a.icon, app: a.app,
-      isOpen: false, isMinimized: false, isMaximized: false,
-      position: { x: a.x, y: a.y }, size: { width: a.w, height: a.h }, zIndex: 1000,
-      data: null,
-    };
+      w[a.id] = {
+        id: a.id, title: a.title, icon: a.icon, app: a.app,
+        isOpen: false, isMinimized: false, isMaximized: false,
+        position: { x: a.x, y: a.y }, size: { width: a.w, height: a.h }, zIndex: 1000,
+        data: null, noMaximize: a.noMaximize || false,
+      };
   });
   return w;
 };

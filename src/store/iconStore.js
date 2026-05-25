@@ -3,17 +3,25 @@ import { create } from "zustand";
 const STORAGE_KEY = "portfolio-icon-positions";
 
 const defaultPositions = {
-  files: { x: 24, y: 72 },
-  terminal: { x: 130, y: 72 },
-  about: { x: 24, y: 148 },
-  browser: { x: 24, y: 224 },
-  photos: { x: 130, y: 148 },
-  settings: { x: 24, y: 300 },
-  doom: { x: 130, y: 224 },
-  pong: { x: 24, y: 376 },
-  tictactoe: { x: 130, y: 300 },
-  sudoku: { x: 130, y: 376 },
-  resume: { x: 24, y: 452 },
+  files: { x: 20, y: 68 },
+  terminal: { x: 120, y: 68 },
+  about: { x: 20, y: 140 },
+  browser: { x: 20, y: 212 },
+  photos: { x: 120, y: 140 },
+  settings: { x: 20, y: 284 },
+  doom: { x: 120, y: 212 },
+  pong: { x: 20, y: 356 },
+  tictactoe: { x: 120, y: 284 },
+  sudoku: { x: 120, y: 356 },
+  resume: { x: 20, y: 428 },
+  calculator: { x: 120, y: 428 },
+  minesweeper: { x: 220, y: 68 },
+  githubstats: { x: 220, y: 140 },
+  memory: { x: 220, y: 212 },
+  paint: { x: 220, y: 284 },
+  snake: { x: 220, y: 356 },
+  breakout: { x: 220, y: 428 },
+  typing: { x: 220, y: 500 },
 };
 
 const loadPositions = () => {

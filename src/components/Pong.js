@@ -2,8 +2,8 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 
 const W = 600, H = 400;
-const PAD_W = 8, PAD_H = 60, BALL_R = 5, SPEED = 3;
-const AI_SPEED = 2.5;
+const PAD_W = 8, PAD_H = 60, BALL_R = 5, SPEED = 2.8;
+const AI_SPEED = 0.9;
 const WIN_SCORE = 7;
 
 function css(name) {
@@ -71,11 +71,11 @@ export default function Pong() {
       fg: css("--text-primary"),
     };
 
-    const s = {
-      px: 20, py: H / 2 - PAD_H / 2,
-      ax: W - 20 - PAD_W, ay: H / 2 - PAD_H / 2,
-      bx: W / 2, by: H / 2, bvx: 0, bvy: 0,
-    };
+      const s = {
+        px: 20, py: H / 2 - PAD_H / 2,
+        ax: W - 20 - PAD_W, ay: H / 2 - PAD_H / 2,
+        bx: W / 2, by: H / 2, bvx: 0, bvy: 0,
+      };
 
     if (sRef.current) {
       s.px = sRef.current.px; s.py = sRef.current.py;
@@ -106,11 +106,11 @@ export default function Pong() {
       if (!running) return;
       const k = keys.current;
 
-      if (k["arrowup"] || k["w"]) s.py = Math.max(0, s.py - 5);
-      if (k["arrowdown"] || k["s"]) s.py = Math.min(H - PAD_H, s.py + 5);
+      if (k["arrowup"] || k["w"]) s.py = Math.max(0, s.py - 3);
+      if (k["arrowdown"] || k["s"]) s.py = Math.min(H - PAD_H, s.py + 3);
 
-      const aiTarget = s.by - PAD_H / 2;
-      if (Math.abs(s.ay - aiTarget) > 4) s.ay += Math.sign(aiTarget - s.ay) * AI_SPEED;
+      const aiTarget = s.by - PAD_H / 2 + (Math.sin(Date.now() * 0.001) * 20);
+      if (Math.abs(s.ay - aiTarget) > 12) s.ay += Math.sign(aiTarget - s.ay) * AI_SPEED;
       s.ay = Math.max(0, Math.min(H - PAD_H, s.ay));
 
       if (phaseRef.current === "playing") {

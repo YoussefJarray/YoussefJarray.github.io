@@ -6,6 +6,12 @@ export const wallpapers = [
   { id: "night-city", url: "/wallpaper.jpg", label: "Night City" },
   { id: "abstract-neon", url: "https://images.unsplash.com/photo-1620121692029-d088224ddc74?fm=jpg&q=60&w=3000&auto=format&fit=crop", label: "Abstract Neon" },
   { id: "abstract-warm", url: "https://images.unsplash.com/photo-1620207418302-439b387441b0?fm=jpg&q=60&w=3000&auto=format&fit=crop", label: "Abstract Warm" },
+  { id: "wp1", url: "/wallpapers/wp1.jpg", label: "Lush Green" },
+  { id: "wp2", url: "/wallpapers/wp2.jpg", label: "Blue Flow" },
+  { id: "wp3", url: "/wallpapers/wp3.jpg", label: "Color Splash" },
+  { id: "wp4", url: "/wallpapers/wp4.jpg", label: "Dark Wave" },
+  { id: "wp5", url: "/wallpapers/wp5.jpg", label: "Verdant" },
+  { id: "wp6", url: "/wallpapers/wp6.jpg", label: "Misty" },
 ];
 
 export const accentColors = [

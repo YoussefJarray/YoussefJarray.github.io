@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920,height=1080">
+<title>GitHub Portfolio Screenshots</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a1c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 40px 20px;
+  }
+
+  .screenshot { display: none; }
+  .screenshot.active { display: block; }
+
+  .frame {
+    background: #0f0f23;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  /* ─── SCREENSHOT 1: Full Desktop ─── */
+  .desktop-view {
+    width: 1360px;
+    height: 768px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0b0b1e 0%, #141428 50%, #1a1a35 100%);
+    border-radius: 12px;
+  }
+
+  /* Wallpaper */
+  .wallpaper {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(236,72,153,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.05) 0%, transparent 50%);
+  }
+
+  /* Desktop icons */
+  .desktop-icons {
+    position: absolute; top: 20px; left: 20px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .desktop-icons .icon {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 12px; border-radius: 8px;
+    color: rgba(255,255,255,0.7); font-size: 11px;
+    cursor: pointer; width: 140px;
+    transition: all 0.15s;
+  }
+  .desktop-icons .icon:hover { background: rgba(255,255,255,0.06); color: white; }
+  .desktop-icons .icon span { font-size: 18px; }
+
+  /* Window */
+  .window {
+    position: absolute;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    background: rgba(18, 18, 38, 0.95);
+    backdrop-filter: blur(20px);
+  }
+  .window-titlebar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .window-titlebar .dots {
+    display: flex; gap: 6px;
+  }
+  .window-titlebar .dots span {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .window-titlebar .dots .r { background: #ef4444; }
+  .window-titlebar .dots .y { background: #eab308; }
+  .window-titlebar .dots .g { background: #22c55e; }
+  .window-titlebar .title {
+    flex: 1; text-align: center;
+    font-size: 11px; color: rgba(255,255,255,0.6);
+    font-weight: 500;
+  }
+  .window-body {
+    padding: 16px; color: rgba(255,255,255,0.7);
+    font-size: 12px;
+  }
+
+  /* Terminal window */
+  .window-terminal {
+    top: 60px; left: 180px;
+    width: 520px; height: 320px;
+  }
+  .window-terminal .window-body {
+    padding: 12px; font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+    font-size: 12px; line-height: 1.6;
+    background: rgba(0,0,0,0.3);
+  }
+  .window-terminal .line { opacity: 0.8; }
+  .window-terminal .prompt { color: #22c55e; }
+  .window-terminal .cmd { color: #e2e8f0; }
+  .window-terminal .output { color: #94a3b8; margin-left: 12px; }
+
+  /* About window */
+  .window-about {
+    top: 120px; right: 160px;
+    width: 360px; height: 240px;
+  }
+  .window-about .avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #f97316, #e11d48);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: bold; color: white;
+    margin-bottom: 12px;
+  }
+  .window-about .name { font-size: 16px; font-weight: 600; color: white; margin-bottom: 2px; }
+  .window-about .role { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+  .window-about .bio { font-size: 11px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  /* Top Panel */
+  .top-panel {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 44px;
+    display: flex; align-items: center; padding: 0 8px;
+    background: rgba(8, 8, 24, 0.82);
+    backdrop-filter: blur(28px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    z-index: 10;
+  }
+  .top-panel .launcher {
+    width: 32px; height: 32px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.04);
+    margin-right: 4px;
+  }
+  .top-panel .task {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 8px;
+    font-size: 11px; color: rgba(255,255,255,0.5);
+    margin: 0 1px;
+  }
+  .top-panel .task.active {
+    background: rgba(255,255,255,0.08);
+    color: white; font-weight: 500;
+  }
+  .top-panel .task.active::after {
+    content: ''; position: absolute; bottom: 0; left: 8px; right: 8px;
+    height: 2px; border-radius: 2px; background: var(--accent, #3b82f6);
+  }
+  .top-panel .spacer { flex: 1; }
+  .top-panel .tray-group { display: flex; align-items: center; gap: 0; }
+  .top-panel .tray-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.15s;
+  }
+  .top-panel .tray-btn:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
+  .top-panel .yj-avatar {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, #f97316, #e11d48);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: bold; color: white;
+    margin-right: 4px; cursor: default;
+  }
+  .top-panel .clock {
+    display: flex; flex-direction: column; align-items: flex-end;
+    padding: 4px 10px; border-radius: 8px;
+    cursor: default;
+  }
+  .top-panel .clock .time { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.85); line-height: 1.2; }
+  .top-panel .clock .date { font-size: 8px; color: rgba(255,255,255,0.4); line-height: 1.2; }
+
+  /* Bottom Panel */
+  .bottom-panel {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 44px;
+    display: flex; align-items: center; padding: 0 8px;
+    background: rgba(10, 10, 28, 0.85);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    z-index: 10;
+    gap: 2px;
+  }
+  .bottom-panel .kde-launcher {
+    width: 36px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #f97316; font-size: 16px;
+    margin-right: 4px;
+  }
+  .bottom-panel .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.06); margin: 0 6px; border-radius: 2px; }
+  .bottom-panel .dock-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.4); font-size: 16px;
+    transition: all 0.15s;
+  }
+  .bottom-panel .dock-icon.active { color: white; }
+  .bottom-panel .dock-icon:hover { background: rgba(255,255,255,0.08); color: white; }
+  .bottom-panel .dock-indicator {
+    position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 3px; border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .bottom-panel .dock-indicator.active { width: 16px; background: var(--accent, #3b82f6); }
+  .bottom-panel .dock-indicator.open { background: rgba(255,255,255,0.3); }
+  .bottom-panel .task-area {
+    flex: 1;
+    display: flex; align-items: center; gap: 2px;
+    overflow: hidden; margin: 0 4px;
+  }
+  .bottom-panel .task-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 6px;
+    font-size: 11px;
+    transition: all 0.15s;
+    max-width: 140px;
+  }
+  .bottom-panel .task-btn.active { background: rgba(255,255,255,0.12); color: white; }
+  .bottom-panel .task-btn.inactive { color: rgba(255,255,255,0.4); }
+  .bottom-panel .task-btn.inactive:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); }
+  .bottom-panel .sys-tray {
+    display: flex; align-items: center; gap: 2px; margin-left: auto;
+  }
+  .bottom-panel .sys-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .bottom-panel .sys-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+
+  /* SVG icons inline */
+  .wifi-svg { width: 16px; height: 16px; }
+  .battery-svg { width: 24px; height: 14px; }
+
+  /* SCREENSHOT 2: Start Menu */
+  .start-menu-view {
+    width: 640px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    background: rgba(15, 15, 35, 0.95);
+    backdrop-filter: blur(32px);
+  }
+  .start-menu-view .search-bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 16px 8px;
+  }
+  .start-menu-view .search-bar input {
+    flex: 1; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 10px; padding: 10px 14px;
+    color: rgba(255,255,255,0.7); font-size: 13px;
+    outline: none; width: 100%;
+  }
+  .start-menu-view .body {
+    display: flex; min-height: 320px;
+  }
+  .start-menu-view .sidebar {
+    width: 120px; padding: 8px; border-right: 1px solid rgba(255,255,255,0.04);
+  }
+  .start-menu-view .cat-btn {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; padding: 8px 10px; border-radius: 8px;
+    border: none; background: transparent;
+    color: rgba(255,255,255,0.4); font-size: 11px;
+    cursor: pointer; transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .start-menu-view .cat-btn:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.04); }
+  .start-menu-view .cat-btn.active { color: white; font-weight: 500; background: var(--accent); box-shadow: 0 2px 8px rgba(59,130,246,0.3); }
+  .start-menu-view .grid {
+    flex: 1; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; overflow: auto;
+  }
+  .start-menu-view .app-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    border: none; background: transparent;
+    color: rgba(255,255,255,0.5); font-size: 11px;
+    cursor: pointer; text-align: left; transition: all 0.15s;
+  }
+  .start-menu-view .app-btn:hover { background: rgba(255,255,255,0.04); }
+  .start-menu-view .app-btn .icon { font-size: 22px; }
+  .start-menu-view .app-btn .label { color: rgba(255,255,255,0.7); font-weight: 500; }
+  .start-menu-view .app-btn .desc { color: rgba(255,255,255,0.3); font-size: 9px; margin-top: 1px; }
+  .start-menu-view .footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.02);
+  }
+  .start-menu-view .footer .user { display: flex; align-items: center; gap: 10px; }
+  .start-menu-view .footer .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, #f97316, #e11d48);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: bold; color: white;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+  .start-menu-view .footer .user .name { font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 500; }
+  .start-menu-view .footer .user .status { font-size: 9px; color: rgba(255,255,255,0.3); }
+
+  /* Overlay */
+  .overlay { background: rgba(5, 5, 20, 0.75); backdrop-filter: blur(12px); }
+
+  /* Screen selector */
+  .screen-selector { display: flex; gap: 12px; margin-bottom: 24px; }
+  .screen-selector button {
+    padding: 8px 20px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.6); font-size: 13px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .screen-selector button:hover { background: rgba(255,255,255,0.08); color: white; }
+  .screen-selector button.active { background: var(--accent, #3b82f6); color: white; border-color: transparent; }
+
+  /* Section labels */
+  .section-label {
+    text-align: center; color: rgba(255,255,255,0.3);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+
+  /* Calendar popup */
+  .calendar-popup {
+    position: absolute; top: 44px; right: 10px;
+    width: 260px; border-radius: 14px;
+    background: rgba(15, 15, 30, 0.96); backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden; z-index: 20;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+
+  /* Volume popup */
+  .vol-popup {
+    position: absolute; top: 44px; right: 180px;
+    width: 220px; border-radius: 12px;
+    background: rgba(15, 15, 30, 0.96); backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 12px; z-index: 20;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  /* Mobile view */
+  .mobile-view {
+    width: 375px;
+    height: 812px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0b0b1e 0%, #141428 50%, #1a1a35 100%);
+    border-radius: 32px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .mobile-view .top-panel { border-radius: 32px 32px 0 0; height: 38px; }
+  .mobile-view .top-panel .clock .time { font-size: 10px; }
+  .mobile-view .top-panel .clock .date { display: none; }
+  .mobile-view .top-panel .yj-avatar { width: 22px; height: 22px; font-size: 7px; }
+
+  h1 { color: white; font-size: 24px; font-weight: 700; margin-bottom: 8px; text-align: center; }
+  p { color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 32px; text-align: center; }
+</style>
+</head>
+<body>
+  <h1>Portfolio Screenshots</h1>
+  <p>Generated previews of the desktop environment</p>
+
+  <div class="screen-selector">
+    <button class="active" data-screen="desktop" onclick="showScreen('desktop')">Full Desktop</button>
+    <button data-screen="startmenu" onclick="showScreen('startmenu')">Start Menu</button>
+    <button data-screen="popups" onclick="showScreen('popups')">System Tray Popups</button>
+    <button data-screen="mobile" onclick="showScreen('mobile')">Mobile View</button>
+  </div>
+
+  <!-- ── SCREEN 1: Full Desktop ── -->
+  <div id="screen-desktop" class="screenshot active">
+    <div class="frame">
+      <div class="desktop-view">
+        <div class="wallpaper"></div>
+
+        <!-- Top Panel -->
+        <div class="top-panel">
+          <div class="launcher">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1.5" opacity="0.4"/>
+              <circle cx="12" cy="4" r="1.2" opacity="0.6"/>
+              <circle cx="12" cy="20" r="1.2" opacity="0.6"/>
+              <circle cx="4" cy="12" r="1.2" opacity="0.6"/>
+              <circle cx="20" cy="12" r="1.2" opacity="0.6"/>
+              <circle cx="5.5" cy="5.5" r="1" opacity="0.4"/>
+              <circle cx="18.5" cy="5.5" r="1" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="task active">
+            <span>📁</span> Terminal
+          </div>
+          <div class="task">
+            <span>👤</span> About Me
+          </div>
+          <div class="spacer"></div>
+          <div class="tray-group">
+            <div class="yj-avatar">YJ</div>
+            <div class="tray-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 8 14 2 18 6 11 5" opacity="0.5"/><path d="M19.07 10.93a8 8 0 1 1-6.47-6.47" opacity="0.5"/></svg>
+            </div>
+            <div class="tray-btn">
+              <svg class="wifi-svg" viewBox="0 0 16 16" fill="none"><rect x="1" y="13" width="4" height="3.5" rx="1" fill="currentColor" opacity="0.9"/><rect x="6" y="9.5" width="4" height="6.5" rx="1" fill="currentColor" opacity="0.9"/><rect x="11" y="6" width="4" height="10" rx="1" fill="currentColor" opacity="0.9"/></svg>
+            </div>
+            <div class="tray-btn">
+              <svg class="battery-svg" viewBox="0 0 24 14" fill="none"><rect x="0.5" y="1" width="19" height="12" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.7"/><rect x="20.5" y="4" width="2.5" height="6" rx="1" fill="currentColor" opacity="0.5"/><rect x="2.5" y="2.5" width="3.5" height="9" rx="0.8" fill="#4ade80" opacity="1"/><rect x="7" y="2.5" width="3.5" height="9" rx="0.8" fill="#4ade80" opacity="1"/><rect x="11.5" y="2.5" width="3.5" height="9" rx="0.8" fill="#4ade80" opacity="1"/><rect x="16" y="2.5" width="3.5" height="9" rx="0.8" fill="#4ade80" opacity="0.1"/></svg>
+            </div>
+          </div>
+          <div class="clock">
+            <span class="time">2:41 PM</span>
+            <span class="date">Mon, May 25</span>
+          </div>
+        </div>
+
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+          <div class="icon"><span>📁</span> Projects</div>
+          <div class="icon"><span>>_</span> Terminal</div>
+          <div class="icon"><span>👤</span> About Me</div>
+          <div class="icon"><span>🌐</span> Web Browser</div>
+          <div class="icon"><span>🖼</span> Photos</div>
+          <div class="icon"><span>⚙️</span> Settings</div>
+        </div>
+
+        <!-- Terminal Window -->
+        <div class="window window-terminal">
+          <div class="window-titlebar">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span class="title">Terminal</span>
+            <span style="width:52px"></span>
+          </div>
+          <div class="window-body">
+            <div class="line"><span class="prompt">yuki@portfolio:~$</span> <span class="cmd">ls -la projects/</span></div>
+            <div class="line output">total 24</div>
+            <div class="line output">drwxr-xr-x  6 yuki  staff  192 May 25 14:30 .</div>
+            <div class="line output">drwxr-xr-x  8 yuki  staff  256 May 25 14:30 ..</div>
+            <div class="line output" style="margin-top:4px"><span class="prompt">yuki@portfolio:~$</span> <span class="cmd">cat about.md</span></div>
+            <div class="line output">Full-stack developer crafting digital</div>
+            <div class="line output">experiences with modern web tech ✨</div>
+            <div class="line output" style="margin-top:4px"><span class="prompt">yuki@portfolio:~$</span> <span class="cmd" style="animation: blink 1s infinite">_</span></div>
+          </div>
+        </div>
+
+        <!-- About Window -->
+        <div class="window window-about">
+          <div class="window-titlebar">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span class="title">About Me</span>
+            <span style="width:52px"></span>
+          </div>
+          <div class="window-body" style="display:flex;gap:16px;align-items:flex-start">
+            <div class="avatar">YJ</div>
+            <div>
+              <div class="name">Youssef Jarray</div>
+              <div class="role">Full-Stack Developer</div>
+              <div class="bio">Building interactive web experiences with Next.js, React, and modern CSS. This portfolio is a fully functional Linux-inspired desktop environment in the browser.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Panel -->
+        <div class="bottom-panel">
+          <div class="kde-launcher"></div>
+          <div class="divider"></div>
+          <div class="dock-icon" style="position:relative">
+            <span>📁</span>
+            <div class="dock-indicator active"></div>
+          </div>
+          <div class="dock-icon" style="position:relative">
+            <span>>_</span>
+            <div class="dock-indicator open"></div>
+          </div>
+          <div class="dock-icon" style="position:relative">
+            <span>👤</span>
+          </div>
+          <div class="dock-icon" style="position:relative">
+            <span>🌐</span>
+          </div>
+          <div class="dock-icon" style="position:relative">
+            <span>⚙️</span>
+          </div>
+          <div class="divider"></div>
+          <div class="task-area"></div>
+          <div class="sys-tray">
+            <div class="sys-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 8 14 2 18 6 11 5" opacity="0.5"/><path d="M19.07 10.93a8 8 0 1 1-6.47-6.47" opacity="0.5"/></svg>
+            </div>
+            <div class="sys-btn">
+              <svg width="22" height="14" viewBox="0 0 22 14" fill="none"><rect x="0.5" y="1.5" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.65"/><rect x="19" y="4.5" width="2.5" height="5" rx="1" fill="currentColor" opacity="0.5"/><rect x="2" y="3" width="3.2" height="8" rx="0.8" fill="#4ade80" opacity="0.9"/><rect x="6" y="3" width="3.2" height="8" rx="0.8" fill="#4ade80" opacity="0.9"/><rect x="10" y="3" width="3.2" height="8" rx="0.8" fill="#4ade80" opacity="0.9"/><rect x="14" y="3" width="3.2" height="8" rx="0.8" fill="#4ade80" opacity="0.13"/></svg>
+            </div>
+            <div class="sys-btn">🔊</div>
+            <div class="sys-btn" style="font-size:11px;font-weight:500;width:auto;padding:0 6px">2:41 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: Start Menu ── -->
+  <div id="screen-startmenu" class="screenshot">
+    <div class="overlay" style="padding:40px">
+      <div class="start-menu-view">
+        <div class="search-bar">
+          <input type="text" placeholder="Type to search..." value="" readonly>
+        </div>
+        <div class="body">
+          <div class="sidebar">
+            <button class="cat-btn active"><span>⭐</span> Favorites</button>
+            <button class="cat-btn"><span>>_</span> Development</button>
+            <button class="cat-btn"><span>🌐</span> Internet</button>
+            <button class="cat-btn"><span>🖼</span> Graphics</button>
+            <button class="cat-btn"><span>🎮</span> Games</button>
+            <button class="cat-btn"><span>⚙️</span> System</button>
+          </div>
+          <div class="grid">
+            <div class="app-btn"><span class="icon">📁</span><div><div class="label">Projects</div><div class="desc">Browse projects</div></div></div>
+            <div class="app-btn"><span class="icon">>_</span><div><div class="label">Terminal</div><div class="desc">Command line</div></div></div>
+            <div class="app-btn"><span class="icon">🌐</span><div><div class="label">Web Browser</div><div class="desc">Browse the web</div></div></div>
+            <div class="app-btn"><span class="icon">🖼</span><div><div class="label">Photos</div><div class="desc">Image gallery</div></div></div>
+            <div style="grid-column:1/-1;display:flex;gap:6px">
+              <div class="app-btn" style="flex:1"><span class="icon">🎮</span><div><div class="label">Doom</div><div class="desc">Raycasting FPS</div></div></div>
+              <div class="app-btn" style="flex:1"><span class="icon">🏓</span><div><div class="label">Pong</div><div class="desc">Classic paddle ball</div></div></div>
+            </div>
+            <div class="app-btn"><span class="icon">👤</span><div><div class="label">About Me</div><div class="desc">Personal info</div></div></div>
+            <div class="app-btn"><span class="icon">⚙️</span><div><div class="label">Settings</div><div class="desc">Preferences</div></div></div>
+          </div>
+        </div>
+        <div class="footer">
+          <div class="user">
+            <div class="avatar">YJ</div>
+            <div><div class="name">Yuki</div><div class="status">Online</div></div>
+          </div>
+          <div style="display:flex;gap:4px">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.3)">⚙️</div>
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(255,255,255,0.3)">⏻</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: System Tray Popups ── -->
+  <div id="screen-popups" class="screenshot">
+    <div style="display:flex;gap:24px;align-items:flex-start;padding:20px">
+      <!-- Calendar -->
+      <div class="calendar-popup" style="position:relative;top:0;right:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <button style="color:rgba(255,255,255,0.4);background:none;border:none;cursor:pointer;font-size:14px">&lsaquo;</button>
+          <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8)">May 2026</span>
+          <button style="color:rgba(255,255,255,0.4);background:none;border:none;cursor:pointer;font-size:14px">&rsaquo;</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);padding:8px 16px 0">
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">MO</span>
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">TU</span>
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">WE</span>
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">TH</span>
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">FR</span>
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">SA</span>
+          <span style="font-size:9px;color:rgba(255,255,255,0.3);text-align:center;font-weight:600;letter-spacing:0.1em">SU</span>
+        </div>
+        <div id="calDays" style="display:grid;grid-template-columns:repeat(7,1fr);padding:4px 16px 12px"></div>
+      </div>
+
+      <!-- Volume -->
+      <div class="vol-popup" style="position:relative;top:0;right:0">
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.15em;font-weight:600;margin-bottom:10px">Volume</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="color:rgba(255,255,255,0.5);font-size:15px;cursor:pointer">🔊</div>
+          <div style="flex:1;position:relative;height:20px;display:flex;align-items:center">
+            <div style="position:absolute;inset:0;height:3px;border-radius:4px;background:rgba(255,255,255,0.06)"></div>
+            <div style="position:absolute;left:0;height:3px;width:65%;border-radius:4px;background:#3b82f6"></div>
+            <div style="position:absolute;left:calc(65% - 7px);width:14px;height:14px;border-radius:50%;background:#3b82f6;border:2px solid rgba(255,255,255,0.15);box-shadow:0 2px 8px rgba(0,0,0,0.5)"></div>
+          </div>
+          <span style="font-size:10px;color:rgba(255,255,255,0.4);font-family:monospace;width:24px;text-align:right">65</span>
+        </div>
+      </div>
+
+      <!-- Battery -->
+      <div class="vol-popup" style="position:relative;top:0;right:0;width:200px">
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.15em;font-weight:600;margin-bottom:10px">Power</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:rgba(255,255,255,0.4);font-size:10px">Charge</span><span style="font-size:11px;font-weight:500;color:#4ade80">87%</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:rgba(255,255,255,0.4);font-size:10px">State</span><span style="font-size:11px;color:rgba(255,255,255,0.6)">Discharging</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:rgba(255,255,255,0.4);font-size:10px">Remaining</span><span style="font-size:11px;color:rgba(255,255,255,0.6)">~3h 12m</span></div>
+        <div style="border-radius:4px;overflow:hidden;height:3px;background:rgba(255,255,255,0.06)"><div style="height:100%;width:87%;border-radius:4px;background:#4ade80"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 4: Mobile ── -->
+  <div id="screen-mobile" class="screenshot">
+    <div style="display:flex;gap:24px;align-items:center;justify-content:center;padding:20px">
+      <div class="mobile-view">
+        <div class="wallpaper"></div>
+        <div class="top-panel" style="height:38px">
+          <div class="launcher" style="width:28px;height:28px">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.5" opacity="0.4"/><circle cx="12" cy="4" r="1.2" opacity="0.6"/><circle cx="12" cy="20" r="1.2" opacity="0.6"/><circle cx="4" cy="12" r="1.2" opacity="0.6"/><circle cx="20" cy="12" r="1.2" opacity="0.6"/></svg>
+          </div>
+          <div class="spacer"></div>
+          <div class="yj-avatar" style="width:22px;height:22px;font-size:7px">YJ</div>
+          <div class="clock" style="padding:4px 6px">
+            <span class="time" style="font-size:10px">2:41 PM</span>
+          </div>
+        </div>
+        <div class="window" style="top:60px;left:12px;width:calc(100% - 24px);height:200px">
+          <div class="window-titlebar">
+            <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+            <span class="title">Terminal</span>
+          </div>
+          <div class="window-body" style="font-size:10px;padding:8px;font-family:monospace">
+            <div style="color:#22c55e">yuki@portfolio:~$</div>
+            <div style="color:#94a3b8;margin-left:8px">ls -la</div>
+            <div style="color:#94a3b8;margin-left:8px">about.md</div>
+            <div style="color:#22c55e;margin-top:4px">yuki@portfolio:~$</div>
+            <div style="color:#94a3b8;margin-left:8px">cat about.md</div>
+            <div style="color:#e2e8f0;margin-left:8px">Full-stack developer crafting</div>
+            <div style="color:#e2e8f0;margin-left:8px">digital experiences with web tech</div>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:4px;background:rgba(255,255,255,0.15)"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Hash navigation on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = location.hash.replace('#', '') || 'desktop';
+      const btn = document.querySelector(`[data-screen="${hash}"]`);
+      if (btn) btn.click();
+      // Hide UI after 2s for clean screenshots
+      setTimeout(() => {
+        document.querySelector('.screen-selector').style.opacity = '0';
+        document.querySelector('h1').style.opacity = '0';
+        document.querySelector('p').style.opacity = '0';
+        document.querySelector('.section-title')?.remove();
+      }, 2000);
+    });
+
+    // Populate calendar
+    const calDays = document.getElementById('calDays');
+    if (calDays) {
+      const firstDay = 1; // May 2026 starts on Friday (index 4 in Mon-start)
+      const emptyStart = 4; // Mon=0, Tue=1... Fri=4
+      for (let i = 0; i < emptyStart; i++) {
+        calDays.innerHTML += '<div style="height:28px"></div>';
+      }
+      for (let i = 1; i <= 31; i++) {
+        const isToday = i === 25;
+        calDays.innerHTML += `<div style="height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:11px;${isToday?'background:#3b82f6;color:white;font-weight:700;box-shadow:0 2px 8px rgba(59,130,246,0.3)':'color:rgba(255,255,255,0.5)'}">${i}</div>`;
+      }
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screenshot').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + id).classList.add('active');
+      document.querySelectorAll('.screen-selector button').forEach(b => b.classList.remove('active'));
+      const btn = document.querySelector(`[data-screen="${id}"]`);
+      if (btn) btn.classList.add('active');
+      location.hash = id;
+    }
+  </script>
+</body>
+</html>

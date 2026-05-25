@@ -173,6 +173,12 @@ export default function MarkdownViewer() {
                       ))}
                     </ul>
                   );
+                case "img":
+                  return (
+                    <div key={i} style={{ textAlign: "center" }}>
+                      <img src={block.src} alt={block.alt} style={{ maxWidth: "100%", borderRadius: 8, border: "1px solid var(--border)" }} loading="lazy" />
+                    </div>
+                  );
                 case "code": {
                   const highlighted = hljs.highlightAuto(block.code).value;
                   return (

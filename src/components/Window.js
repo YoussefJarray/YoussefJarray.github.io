@@ -1,29 +1,11 @@
 "use client";
 import { useRef, useCallback, useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
 import { useWindowStore } from "../store/windowStore";
 import { FiX, FiMinus, FiSquare } from "react-icons/fi";
-import { DoomIcon, PongIcon, TicTacToeIcon, SudokuIcon, PdfIcon } from "./icons/GameIcons";
-
-const appIcons = {
-  folder: "\uD83D\uDCC1",
-  terminal: "\u276F_",
-  user: "\uD83D\uDC64",
-  settings: "\u2699\uFE0F",
-  browser: "\uD83C\uDF10",
-  doom: <DoomIcon size={14} />,
-  pong: <PongIcon size={14} />,
-  tictactoe: <TicTacToeIcon size={14} />,
-  sudoku: <SudokuIcon size={14} />,
-  pdf: <PdfIcon size={14} />,
-  photos: (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="white" stroke="black" strokeWidth="1.5" className="shrink-0">
-      <rect x="2" y="3" width="20" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="2" />
-      <path d="M21 15l-5-5L5 19" />
-    </svg>
-  ),
-};
+import { getSmallIcon } from "../data/iconRegistry";
+import { WindowContext } from "../utils/windowContext";
 
 const MIN_W = 360;
 const MIN_H = 200;
@@ -43,6 +25,16 @@ export default function Window({ id, title, icon, scale = 1, children }) {
   const dragOffset = useRef({ x: 0, y: 0 });
   const resizeStart = useRef({ x: 0, y: 0, w: 0, h: 0, px: 0, py: 0 });
   const wasMaximized = useRef(false);
+  const windowRef = useRef(null);
+  const titleBarRef = useRef(null);
+
+  useEffect(() => {
+    if (!windowRef.current) return;
+    gsap.fromTo(windowRef.current,
+      { opacity: 0, scale: 0.88, y: -20 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "back.out(1.4)" }
+    );
+  }, []);
 
   const handleMouseDown = useCallback((e) => {
     focusWindow(id);
@@ -50,16 +42,16 @@ export default function Window({ id, title, icon, scale = 1, children }) {
 
     if (win.isMaximized) {
       const maxW = window.innerWidth;
-      const maxH = window.innerHeight - 48;
+      const maxH = window.innerHeight - 44;
       const ratioX = e.clientX / maxW;
-      const ratioY = (e.clientY - 48) / maxH;
+      const ratioY = (e.clientY - 44) / maxH;
       const newW = Math.max(MIN_W, Math.min(win.size.width, maxW * 0.8 / scale));
       const newH = Math.max(MIN_H, Math.min(win.size.height, maxH * 0.8 / scale));
       const newX = Math.max(0, Math.min((e.clientX - newW * ratioX * scale) / scale, (window.innerWidth - newW * scale) / scale));
-      const newY = Math.max(0, Math.min((e.clientY - 48 - newH * ratioY * scale) / scale, (window.innerHeight - 48 - newH * scale) / scale));
+      const newY = Math.max(0, Math.min((e.clientY - 44 - newH * ratioY * scale) / scale, (window.innerHeight - 44 - newH * scale) / scale));
       toggleMaximize(id);
       moveWindow(id, newX, newY);
-      dragOffset.current = { x: e.clientX - newX * scale, y: e.clientY - 48 - newY * scale };
+      dragOffset.current = { x: e.clientX - newX * scale, y: e.clientY - 44 - newY * scale };
       wasMaximized.current = true;
       setDragging(true);
       return;
@@ -67,7 +59,7 @@ export default function Window({ id, title, icon, scale = 1, children }) {
 
     setDragging(true);
     wasMaximized.current = false;
-    dragOffset.current = { x: e.clientX - win.position.x * scale, y: e.clientY - 48 - win.position.y * scale };
+    dragOffset.current = { x: e.clientX - win.position.x * scale, y: e.clientY - 44 - win.position.y * scale };
   }, [id, focusWindow, win, toggleMaximize, moveWindow, scale]);
 
   const handleResizeStart = useCallback((dir, e) => {
@@ -83,7 +75,7 @@ export default function Window({ id, title, icon, scale = 1, children }) {
     if (!dragging) return;
     const onMove = (e) => {
       const x = (e.clientX - dragOffset.current.x) / scale;
-      const y = (e.clientY - 48 - dragOffset.current.y) / scale;
+      const y = (e.clientY - 44 - dragOffset.current.y) / scale;
       moveWindow(id, x, y);
     };
     const onUp = () => {
@@ -133,10 +125,11 @@ export default function Window({ id, title, icon, scale = 1, children }) {
     };
   }, [resizing, id, resizeWindow, moveWindow, scale]);
 
-  if (!win || !win.isOpen || win.isMinimized) return null;
+  if (!win || !win.isOpen) return null;
 
   const maxed = win.isMaximized;
   const pos = maxed ? { x: 0, y: 0 } : { x: win.position.x * scale, y: win.position.y * scale };
+  const minimized = win.isMinimized;
 
   return (
     <motion.div
@@ -148,16 +141,21 @@ export default function Window({ id, title, icon, scale = 1, children }) {
       className="fixed"
       style={{
         left: pos.x,
-        top: maxed ? 48 : pos.y + 48,
+        top: maxed ? 44 : pos.y + 44,
         width: maxed ? "100vw" : win.size.width * scale,
-        height: maxed ? "calc(100vh - 48px)" : win.size.height * scale,
-        zIndex: startMenuOpen ? 1 : win.zIndex,
+        height: maxed ? "calc(100vh - 44px)" : win.size.height * scale,
+        zIndex: minimized ? -1 : (startMenuOpen ? 1 : win.zIndex),
         cursor: dragging ? "grabbing" : (resizing ? resizeCursorMap[resizing] : "default"),
+        opacity: minimized ? 0 : 1,
+        pointerEvents: minimized ? "none" : "auto",
+        transform: minimized ? "scale(0.95)" : "none",
+        transition: "opacity 0.15s ease, transform 0.15s ease",
       }}
       onMouseDown={() => focusWindow(id)}
     >
       <div
-        className={`flex flex-col overflow-hidden shadow-2xl transition-shadow duration-200 ${
+        ref={windowRef}
+        className={`flex flex-col overflow-hidden shadow-2xl ${
           maxed ? "rounded-none" : "rounded-xl"
         } ${isFocused ? "shadow-black/60" : "shadow-black/30"}`}
         style={{
@@ -170,38 +168,53 @@ export default function Window({ id, title, icon, scale = 1, children }) {
         }}
       >
         <div
+          ref={titleBarRef}
           className="flex items-center justify-between px-3 py-[7px] select-none shrink-0"
           style={{
             background: isFocused ? "var(--window-titlebar)" : "var(--window-titlebar-inactive)",
             borderBottom: "1px solid var(--border)",
           }}
           onMouseDown={handleMouseDown}
-          onDoubleClick={() => toggleMaximize(id)}
+          onDoubleClick={() => { if (!win.noMaximize) toggleMaximize(id); }}
+          onMouseEnter={() => {
+            gsap.to(titleBarRef.current, { background: "var(--window-titlebar)", duration: 0.2 });
+          }}
+          onMouseLeave={() => {
+            if (!isFocused) gsap.to(titleBarRef.current, { background: "var(--window-titlebar-inactive)", duration: 0.2 });
+          }}
         >
           <div className="flex items-center gap-2.5 text-sm min-w-0" style={{ color: "var(--text-muted)" }}>
-            <span className="text-xs shrink-0">{appIcons[icon] || "\uD83D\uDCC4"}</span>
+            <span className="text-xs shrink-0">{getSmallIcon(icon)}</span>
             <span className="text-xs font-medium truncate" style={{ color: "var(--text-secondary)" }}>{title}</span>
           </div>
           <div className="flex items-center gap-2 shrink-0" onMouseDown={(e) => e.stopPropagation()}>
             <button
               onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
-              className="w-[13px] h-[13px] rounded-full flex items-center justify-center hover:brightness-125 transition-all"
+              onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.2, duration: 0.15, ease: "back.out(2)" })}
+              onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
+              className="w-[13px] h-[13px] rounded-full flex items-center justify-center"
               style={{ background: "#fbbf24" }}
               title="Minimize"
             >
               <FiMinus className="text-[7px] text-black/50" />
             </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); toggleMaximize(id); }}
-              className="w-[13px] h-[13px] rounded-full flex items-center justify-center hover:brightness-125 transition-all"
-              style={{ background: "#34d399" }}
-              title="Maximize"
-            >
-              <FiSquare className="text-[5px] text-black/50" />
-            </button>
+            {!win.noMaximize && (
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleMaximize(id); }}
+                onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.2, duration: 0.15, ease: "back.out(2)" })}
+                onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
+                className="w-[13px] h-[13px] rounded-full flex items-center justify-center"
+                style={{ background: "#34d399" }}
+                title="Maximize"
+              >
+                <FiSquare className="text-[5px] text-black/50" />
+              </button>
+            )}
             <button
               onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
-              className="w-[13px] h-[13px] rounded-full flex items-center justify-center hover:brightness-125 transition-all"
+              onMouseEnter={(e) => { gsap.to(e.currentTarget, { scale: 1.2, duration: 0.15, ease: "back.out(2)" }); gsap.to(e.currentTarget, { boxShadow: "0 0 12px rgba(239,68,68,0.5)", duration: 0.15 }); }}
+              onMouseLeave={(e) => { gsap.to(e.currentTarget, { scale: 1, duration: 0.12 }); gsap.to(e.currentTarget, { boxShadow: "none", duration: 0.12 }); }}
+              className="w-[13px] h-[13px] rounded-full flex items-center justify-center"
               style={{ background: "#ef4444" }}
               title="Close"
             >
@@ -210,7 +223,9 @@ export default function Window({ id, title, icon, scale = 1, children }) {
           </div>
         </div>
         <div className="flex-1 overflow-auto min-h-0">
-          {children}
+          <WindowContext.Provider value={{ id, isMaximized: win.isMaximized, size: win.size }}>
+            {children}
+          </WindowContext.Provider>
         </div>
 
         {!maxed && (

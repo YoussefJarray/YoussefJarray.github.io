@@ -31,14 +31,15 @@ function minimax(board, isMax) {
 }
 
 function cpuMove(board) {
+  const empty = board.map((c, i) => c === null ? i : -1).filter(i => i !== -1);
+  if (empty.length === 0) return -1;
+  if (Math.random() < 0.3) return empty[Math.floor(Math.random() * empty.length)];
   let bestScore = -Infinity, bestIdx = -1;
-  for (let i = 0; i < 9; i++) {
-    if (!board[i]) {
-      board[i] = "O";
-      const score = minimax(board, false);
-      board[i] = null;
-      if (score > bestScore) { bestScore = score; bestIdx = i; }
-    }
+  for (const i of empty) {
+    board[i] = "O";
+    const score = minimax(board, false);
+    board[i] = null;
+    if (score > bestScore) { bestScore = score; bestIdx = i; }
   }
   return bestIdx;
 }

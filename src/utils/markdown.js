@@ -3,6 +3,7 @@ export function renderInline(text) {
     .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:600">$1</strong>')
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, '<code style="background:var(--bg-elevated);padding:1px 5px;border-radius:4px;font-size:11px;color:var(--accent)">$1</code>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;margin:8px 0;border:1px solid var(--border)" loading="lazy" />')
     .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer">$1</a>');
 }
 
@@ -32,6 +33,9 @@ export function parseMarkdown(text) {
     if (line.startsWith("### ")) { blocks.push({ type: "h3", text: line.slice(4) }); i++; continue; }
     if (line.startsWith("## ")) { blocks.push({ type: "h2", text: line.slice(3) }); i++; continue; }
     if (line.startsWith("# ")) { blocks.push({ type: "h1", text: line.slice(2) }); i++; continue; }
+
+    const imgMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)/);
+    if (imgMatch) { blocks.push({ type: "img", alt: imgMatch[1], src: imgMatch[2] }); i++; continue; }
 
     if (line.startsWith("- ") || line.startsWith("* ")) {
       const items = [];

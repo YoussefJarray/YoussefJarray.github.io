@@ -2,7 +2,16 @@
 import { useState, useMemo, useCallback } from "react";
 import { fileSystem } from "../data/fileSystem";
 import { useWindowStore } from "../store/windowStore";
-import { FiFolder, FiChevronRight, FiChevronDown, FiHome } from "react-icons/fi";
+import { FiFolder, FiChevronRight, FiChevronDown, FiHome, FiGrid, FiList } from "react-icons/fi";
+
+function itemIcon(item) {
+  if (item.type === "folder") return "\uD83D\uDCC1";
+  if (item.icon === "pdf") return "\uD83D\uDCD5";
+  if (item.icon === "readme") return "\uD83D\uDCDD";
+  if (item.icon === "post") return "\uD83D\uDCDD";
+  if (item.icon === "url") return "\uD83D\uDD17";
+  return "\uD83D\uDCC4";
+}
 
 function findNode(tree, path) {
   if (!path || path.length === 0) return tree;
@@ -67,7 +76,7 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
                 </div>
               ) : (
                 <span className={`text-3xl transition-transform duration-150 ${isSelected ? "scale-110" : "group-hover:scale-110"}`}>
-                  {isFolder ? "\uD83D\uDCC1" : item.icon === "pdf" ? "\uD83D\uDCD5" : item.icon === "readme" ? "\uD83D\uDCDD" : item.icon === "post" ? "\uD83D\uDCDD" : item.icon === "url" ? "\uD83D\uDD17" : "\uD83D\uDCC4"}
+                  {itemIcon(item)}
                 </span>
               )}
               <div className="flex-1" />
@@ -85,10 +94,49 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
   );
 }
 
+function FolderList({ items, selected, onSelect, onOpen }) {
+  return (
+    <div className="p-2">
+      <div className="flex items-center gap-2 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-wider border-b" style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}>
+        <span className="w-6 shrink-0" />
+        <span className="flex-1">Name</span>
+        <span className="w-16 text-right">Type</span>
+        <span className="w-12 text-right">Items</span>
+      </div>
+      {items.map((item, i) => {
+        const isFolder = item.type === "folder";
+        const isSelected = selected === i;
+        return (
+          <button
+            key={i}
+            onClick={() => onSelect(i)}
+            onDoubleClick={() => onOpen(item)}
+            className={`flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg transition-all duration-150 ${
+              isSelected ? "bg-white/10" : "hover:bg-white/5"
+            }`}
+          >
+            <span className="text-lg w-6 text-center shrink-0">{itemIcon(item)}</span>
+            <span className={`flex-1 text-[11px] truncate ${isSelected ? "text-white font-medium" : "text-zinc-400"}`}>
+              {item.name}
+            </span>
+            <span className="w-16 text-right text-[10px]" style={{ color: "var(--text-muted)" }}>
+              {isFolder ? "Folder" : "File"}
+            </span>
+            <span className="w-12 text-right text-[10px]" style={{ color: "var(--text-muted)" }}>
+              {isFolder ? item.children?.length || 0 : "—"}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function FileManager() {
   const { openWindow } = useWindowStore();
-  const [path, setPath] = useState([]);
+  const [path, setPath] = useState(["Projects"]);
   const [selectedIdx, setSelectedIdx] = useState(null);
+  const [viewMode, setViewMode] = useState("grid");
 
   const currentFolder = useMemo(() => findNode(fileSystem, path), [path]);
   const items = currentFolder?.children || [];
@@ -176,13 +224,40 @@ export default function FileManager() {
         </div>
       </div>
       <div className="flex-1 flex flex-col min-w-0">
-        <Breadcrumb path={path} onNavigate={navigateTo} onRoot={goRoot} />
+        <div className="flex items-center shrink-0 border-b" style={{ borderColor: "var(--border)" }}>
+          <div className="flex-1 min-w-0">
+            <Breadcrumb path={path} onNavigate={navigateTo} onRoot={goRoot} />
+          </div>
+          <div className="flex items-center gap-1 pr-3">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`p-1.5 rounded-md transition-all ${viewMode === "grid" ? "bg-white/15 text-white" : "text-muted hover:text-secondary hover:bg-white/5"}`}
+              title="Grid view"
+            >
+              <FiGrid size={13} />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`p-1.5 rounded-md transition-all ${viewMode === "list" ? "bg-white/15 text-white" : "text-muted hover:text-secondary hover:bg-white/5"}`}
+              title="List view"
+            >
+              <FiList size={13} />
+            </button>
+          </div>
+        </div>
         <div className="flex-1 overflow-auto">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-muted gap-2 text-xs">
               <FiFolder size={32} />
               <p>Empty folder</p>
             </div>
+          ) : viewMode === "list" ? (
+            <FolderList
+              items={items}
+              selected={selectedIdx}
+              onSelect={setSelectedIdx}
+              onOpen={(item) => item.type === "folder" ? openFolder(item) : openFile(item)}
+            />
           ) : (
             <FolderGrid
               items={items}

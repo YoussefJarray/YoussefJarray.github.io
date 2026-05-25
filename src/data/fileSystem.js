@@ -62,6 +62,55 @@ VR development comes with unique constraints. Maintaining **90fps** requires agg
 *"The hardest part wasn't the gameplay — it was making sure players didn't get motion sick."*`,
   },
   {
+    name: "ModelShare",
+    desc: "Collaborative platform for sharing, discovering, and downloading 3D models with real-time preview.",
+    tags: ["Angular", "Three.js", "PHP", "Tailwind"],
+    href: "https://github.com/YoussefJarray/modelshare",
+    color: "#8b5cf6",
+    readme: `# ModelShare
+
+A collaborative platform for sharing, discovering, and downloading 3D models with real-time preview capabilities.
+
+Built for my university project, ModelShare provides a browser-based environment for artists to upload and showcase their work.
+
+## Tech Stack
+
+- **Angular** — Front-end framework for high performance and consistent state management
+- **Three.js** — Real-time 3D rendering in the browser
+- **PHP** — Custom backend for asset orchestration and session handling
+- **Tailwind CSS** — Utility-first interface for creative workflows
+
+## Features
+
+### Technical Inspector
+
+The inspector tool centralizes model verification, allowing users to check mesh health, UV layouts, and rig hierarchies in a single view. Integrated Three.js toggles allow for immediate switching between wireframe, textured, and normal-map views.
+
+![Technical Inspector](/ms1.png)
+
+### Playback System
+
+The playback engine supports timeline scrubbing and frame-by-frame speed controls, optimized for checking skinning weights and joint transitions.
+
+![Animation Engine](/ms3.png)
+
+### User Profiles
+
+Artists manage personalized profiles to showcase their galleries. The PHP backend facilitates these interactions via session-based handling to ensure smooth, secure browsing.
+
+![Profiles](/ms2.png)
+
+### Asset Ecosystem
+
+The database stores detailed model metadata and versioning, creating a complete history for every uploaded asset within the community ecosystem.
+
+![Ecosystem](/ms4.png)
+
+## Role
+
+**Full Stack Developer** — 2024 — **University Project**`,
+  },
+  {
     name: "Taskr",
     desc: "Full-featured todo app with drag-and-drop, persistence, and keyboard shortcuts.",
     tags: ["React", "Vite", "JavaScript", "Tailwind"],
@@ -117,6 +166,61 @@ function useTasks() {
 ## What I Learned
 
 Building Taskr taught me the importance of **optimistic UI updates**. When dragging a task to reorder, the UI updates immediately before the state settles — this makes drag-and-drop feel instantaneous rather than laggy.`,
+  },
+  {
+    name: "DummyFight",
+    desc: "2D fighting game with combo mechanics, health bars, and AI opponent.",
+    tags: ["Unity", "C#", "Game Dev"],
+    href: "https://github.com/YoussefJarray/DummyFight",
+    color: "#ef4444",
+    readme: `# DummyFight
+
+A 2D fighting game prototype built in **Unity** with **C#**.
+
+## Features
+
+- **Combo system** — Chain attacks for increased damage
+- **Health bars** — Visual feedback for player and enemy health
+- **AI opponent** — Basic enemy AI with attack patterns and blocking
+- **Multiple characters** — Each with unique move sets
+- **Round-based combat** — Best of 3 rounds
+
+## Architecture
+
+The game uses a state-machine pattern for character behavior:
+
+\`\`\`csharp
+public enum FighterState { Idle, Walking, Attacking, Hit, Blocking, KO }
+
+public class Fighter : MonoBehaviour
+{
+    public FighterState State { get; private set; }
+    public float Health;
+    public ComboCounter Combo;
+
+    public void TakeDamage(float amount)
+    {
+        Health -= amount;
+        if (Health <= 0)
+            TransitionTo(FighterState.KO);
+        else
+            TransitionTo(FighterState.Hit);
+    }
+
+    private void TransitionTo(FighterState newState)
+    {
+        State = newState;
+        // Trigger animations, reset timers, etc.
+    }
+}
+\`\`\`
+
+## Controls
+
+- **Arrow keys** — Move
+- **A/S/D** — Punch, Kick, Special
+- **Space** — Block
+- **Shift** — Dash`,
   },
   {
     name: "This Portfolio",

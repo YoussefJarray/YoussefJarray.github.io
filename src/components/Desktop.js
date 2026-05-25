@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
+import gsap from "gsap";
 import { useWindowStore } from "../store/windowStore";
 import { useThemeStore } from "../store/themeStore";
 import { useIconStore } from "../store/iconStore";
-import { useWidgetStore } from "../store/widgetStore";
 import { useWallpaperStore, wallpapers } from "../store/wallpaperStore";
-import { useSettingsStore } from "../store/settingsStore";
 import TopPanel from "./TopPanel";
 import DesktopIcons from "./DesktopIcons";
 import BootScreen from "./BootScreen";
@@ -25,9 +24,19 @@ import Sudoku from "./Sudoku";
 import Pong from "./Pong";
 import Doom from "./Doom";
 import PdfViewer from "./PdfViewer";
+import CalculatorApp from "./CalculatorApp";
+import MinesweeperApp from "./MinesweeperApp";
+import GitHubStatsApp from "./GitHubStatsApp";
+import MemoryApp from "./MemoryApp";
+import PaintApp from "./PaintApp";
+import SnakeApp from "./SnakeApp";
+import BreakoutApp from "./BreakoutApp";
+import MonkeyTypeApp from "./MonkeyTypeApp";
+import DVDScrnSaver from "./DVDScrnSaver";
 
 const appComponents = {
   FileManager, Terminal, AboutApp, SettingsApp, BrowserApp, PhotosApp, MarkdownViewer, TicTacToe, Sudoku, Pong, Doom, PdfViewer,
+  CalculatorApp, MinesweeperApp, GitHubStatsApp, MemoryApp, PaintApp, Snake: SnakeApp, Breakout: BreakoutApp, MonkeyTypeApp,
 };
 
 function hexToRgb(hex) {
@@ -148,36 +157,29 @@ export default function Desktop() {
   const init = useThemeStore((s) => s.init);
   const mode = useThemeStore((s) => s.mode);
   const { selected, setAccent } = useWallpaperStore();
-  const scale = useSettingsStore((s) => s.scale);
   const selectedWp = useMemo(() => wallpapers.find((w) => w.id === selected.wallpaper) || wallpapers[0], [selected.wallpaper]);
   const isWallpaperDark = useWallpaperBrightness(selectedWp.url);
   const [booted, setBooted] = useState(false);
   const [ctxMenu, setCtxMenu] = useState(null);
-
-  useEffect(() => { init(); }, [init]);
-
-  const prevScale = useRef(scale);
+  const [afk, setAfk] = useState(false);
+  const afkTimerRef = useRef(null);
 
   useEffect(() => {
-    const old = prevScale.current;
-    if (old !== scale) {
-      const ratio = old / scale;
-      const store = useWidgetStore.getState();
-      const moved = {};
-      for (const [id, w] of Object.entries(store.widgets)) {
-        moved[id] = { ...w, x: Math.round(w.x * ratio), y: Math.round(w.y * ratio) };
-      }
-      useWidgetStore.setState({ widgets: moved });
+    const reset = () => {
+      setAfk(false);
+      clearTimeout(afkTimerRef.current);
+      afkTimerRef.current = setTimeout(() => setAfk(true), 30000);
+    };
+    const events = ["mousemove", "mousedown", "keydown", "touchstart", "wheel"];
+    events.forEach((e) => window.addEventListener(e, reset));
+    reset();
+    return () => {
+      clearTimeout(afkTimerRef.current);
+      events.forEach((e) => window.removeEventListener(e, reset));
+    };
+  }, []);
 
-      const iconStore = useIconStore.getState();
-      const newPos = {};
-      for (const [id, p] of Object.entries(iconStore.positions)) {
-        newPos[id] = { x: Math.round(p.x * ratio), y: Math.round(p.y * ratio) };
-      }
-      useIconStore.setState({ positions: newPos });
-    }
-    prevScale.current = scale;
-  }, [scale]);
+  useEffect(() => { init(); }, [init]);
 
   useEffect(() => {
     const base = async () => {
@@ -192,12 +194,33 @@ export default function Desktop() {
     base();
   }, [selected.accent, selectedWp.url, mode]);
 
+  const rootRef = useRef(null);
+  const bootTimeline = useRef(null);
+
   const handleBootFinish = useCallback(() => setBooted(true), []);
+
+  useEffect(() => {
+    if (!booted) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const topPanel = el.querySelector("[data-gsap='top-panel']");
+    const icons = el.querySelectorAll("[data-gsap='desktop-icon']");
+    const widgets = el.querySelectorAll("[data-gsap='widget']");
+
+    gsap.set([topPanel, icons, widgets], { opacity: 0, y: -10 });
+    bootTimeline.current = gsap.timeline({ defaults: { ease: "power3.out", duration: 0.4 } })
+      .to(topPanel, { opacity: 1, y: 0, duration: 0.3 }, 0)
+      .to(icons, { opacity: 1, y: 0, stagger: 0.04 }, 0.1)
+      .to(widgets, { opacity: 1, y: 0, stagger: 0.06 }, 0.2);
+
+    return () => { bootTimeline.current?.kill(); };
+  }, [booted]);
 
   if (!booted) return <BootScreen onFinish={handleBootFinish} />;
 
   return (
     <div
+      ref={rootRef}
       className="relative w-screen h-screen overflow-hidden select-none desktop-root"
       data-wallpaper={isWallpaperDark ? "dark" : "light"}
       onContextMenu={(e) => {
@@ -208,28 +231,39 @@ export default function Desktop() {
       onClick={() => setCtxMenu(null)}
     >
       <Wallpaper url={selectedWp.url} />
+
+      <div className="fixed inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-[1]"
+        style={{ paddingBottom: "8vh" }}>
+        <p className="text-sm md:text-base font-medium tracking-wide" style={{
+          color: isWallpaperDark ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.5)",
+          marginBottom: 4,
+        }}>
+          hello my name is
+        </p>
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight" style={{
+          color: isWallpaperDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.65)",
+          textShadow: isWallpaperDark ? "0 0 60px rgba(255,255,255,0.08)" : "0 0 40px rgba(0,0,0,0.06)",
+          lineHeight: 1.1,
+        }}>
+          Youssef Jarray
+        </h1>
+      </div>
+
       <TopPanel />
 
-      <div
-        style={{
-          width: `${100 / scale}%`,
-          height: `${100 / scale}%`,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-      >
+      <div>
         <DesktopIcons wallpaperDark={isWallpaperDark} />
         <DesktopWidgets wallpaperDark={isWallpaperDark} />
       </div>
 
       <AnimatePresence>
         {Object.entries(windows).map(([id, win]) => {
-          if (!win.isOpen || win.isMinimized) return null;
+          if (!win.isOpen) return null;
           const AppComponent = appComponents[win.app];
           if (!AppComponent) return null;
           return (
-            <Window key={id} id={id} title={win.title} icon={win.icon} scale={scale}>
-              <AppComponent />
+            <Window key={id} id={id} title={win.title} icon={win.icon}>
+              <AppComponent id={id} />
             </Window>
           );
         })}
@@ -246,6 +280,8 @@ export default function Desktop() {
           onClose={() => setCtxMenu(null)}
         />
       )}
+
+      {afk && <DVDScrnSaver onDismiss={() => setAfk(false)} />}
     </div>
   );
 }
