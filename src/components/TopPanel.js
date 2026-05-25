@@ -154,19 +154,68 @@ function CalendarPopup({ onClose }) {
 
   return (
     <div className="absolute top-full right-0 mt-2 z-[200]" onClick={(e) => e.stopPropagation()}>
-      <div className="rounded-2xl shadow-2xl border border-white/10 overflow-hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl" style={{ width: 260 }}>
+      <div
+        className="rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          width: 260,
+          background: "var(--window-bg)",
+          border: "1px solid var(--border)",
+          backdropFilter: "blur(24px)",
+        }}
+      >
+        {/* Month nav */}
         <div className="flex items-center justify-between px-4 pt-3 pb-1">
-          <button onClick={() => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }} className="text-gray-200/40 hover:text-gray-200/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&lsaquo;</button>
-          <span className="text-xs font-semibold text-gray-200/80">{monthName}</span>
-          <button onClick={() => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); }} className="text-gray-200/40 hover:text-gray-200/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&rsaquo;</button>
+          <button
+            onClick={() => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }}
+            className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/10 transition-colors text-sm"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            &lsaquo;
+          </button>
+          <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
+            {monthName}
+          </span>
+          <button
+            onClick={() => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); }}
+            className="w-6 h-6 flex items-center justify-center rounded hover:bg-black/10 transition-colors text-sm"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            &rsaquo;
+          </button>
         </div>
-        <div className="grid grid-cols-7 gap-0 px-4 pt-2">
-          {dayNames.map((d) => <div key={d} className="text-[9px] text-gray-300 text-center h-6 flex items-center justify-center font-semibold tracking-wider uppercase">{d}</div>)}
+
+        {/* Day headers */}
+        <div className="grid grid-cols-7 px-4 pt-2">
+          {dayNames.map((d) => (
+            <div
+              key={d}
+              className="text-[9px] text-center h-6 flex items-center justify-center font-semibold tracking-wider uppercase"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {d}
+            </div>
+          ))}
         </div>
-        <div className="grid grid-cols-7 gap-0 px-4 pb-3">
+
+        {/* Day grid */}
+        <div className="grid grid-cols-7 px-4 pb-3">
           {days.map((d, i) => (
-            <div key={i} className={`text-xs text-center h-7 flex items-center justify-center rounded-lg transition-all ${d === null ? "" : isCurrentMonth && d === today ? "text-gray-200 font-bold" : "text-gray-200/50 hover:text-gray-200 hover:bg-white/5 cursor-pointer"}`}
-              style={isCurrentMonth && d === today ? { background: "var(--accent)", boxShadow: "0 2px 8px rgba(59,130,246,0.3)" } : {}}
+            <div
+              key={i}
+              className="text-xs text-center h-7 flex items-center justify-center rounded-lg transition-all"
+              style={
+                isCurrentMonth && d === today
+                  ? {
+                      background: "var(--accent)",
+                      color: "#fff",
+                      fontWeight: 700,
+                      boxShadow: "0 2px 8px rgba(59,130,246,0.3)",
+                    }
+                  : {
+                      color: d ? "var(--text-secondary)" : "transparent",
+                      cursor: d ? "pointer" : "default",
+                    }
+              }
             >
               {d || ""}
             </div>
@@ -180,8 +229,18 @@ function CalendarPopup({ onClose }) {
 function SystemTrayPopup({ title, children }) {
   return (
     <div className="absolute top-full mt-2 z-[200]" style={{ right: 0 }}>
-      <div className="rounded-xl shadow-2xl border border-white/10 overflow-hidden p-3" style={{ width: 220, background: "rgba(15, 15, 30, 0.95)", backdropFilter: "blur(24px)" }}>
-        <div className="text-[9px] text-gray-300 uppercase tracking-[0.15em] font-semibold mb-2.5">{title}</div>
+      <div
+        className="rounded-xl shadow-2xl overflow-hidden p-3"
+        style={{
+          width: 220,
+          background: "var(--window-bg)",
+          border: "1px solid var(--border)",
+          backdropFilter: "blur(24px)",
+        }}
+      >
+        <div className="text-[9px] uppercase tracking-[0.15em] font-semibold mb-2.5" style={{ color: "var(--text-muted)" }}>
+          {title}
+        </div>
         {children}
       </div>
     </div>
@@ -225,26 +284,31 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
     >
       <div
         ref={menuRef}
-        className="rounded-2xl shadow-2xl border border-white/[0.06] overflow-hidden flex"
+        className="rounded-2xl shadow-2xl overflow-hidden flex"
         style={{
           width: 720,
           height: 520,
           background: "var(--menu-bg)",
+          border: "1px solid var(--border)",
           backdropFilter: "blur(40px)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
-          {/* ─── Sidebar ─── */}
-          <div ref={sidebarRef} className="w-[164px] shrink-0 flex flex-col p-3 gap-1 border-r border-white/[0.05] bg-white/[0.015]">
+        {/* Sidebar */}
+        <div ref={sidebarRef} className="w-[164px] shrink-0 flex flex-col p-3 gap-1" style={{ borderRight: "1px solid var(--border)" }}>
           {/* Search */}
-          <div className="flex items-center gap-2.5 bg-white/[0.05] rounded-xl px-3 h-9 border border-white/[0.04] transition-all duration-200 focus-within:border-[var(--accent)]/30 focus-within:bg-white/[0.07] mb-2">
-            <FiSearch size={13} className="text-gray-200/25 shrink-0" />
+          <div
+            className="flex items-center gap-2.5 rounded-xl px-3 h-9 mb-2 transition-all duration-200"
+            style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}
+          >
+            <FiSearch size={13} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search..."
-              className="flex-1 bg-transparent outline-none text-xs text-gray-200/60 placeholder-white/20"
+              className="flex-1 bg-transparent outline-none text-xs"
+              style={{ color: "var(--text-primary)" }}
               autoFocus
             />
           </div>
@@ -256,11 +320,12 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2.5 w-full px-3 py-[7px] rounded-lg text-xs transition-all duration-150 ${
-                  isActive
-                    ? "bg-white/[0.09] text-gray-200 font-medium"
-                    : "text-gray-200/35 hover:text-gray-200/60 hover:bg-white/[0.04]"
-                }`}
+                className="flex items-center gap-2.5 w-full px-3 py-[7px] rounded-lg text-xs transition-all duration-150"
+                style={{
+                  background: isActive ? "var(--bg-elevated)" : "transparent",
+                  color: isActive ? "var(--text-primary)" : "var(--text-muted)",
+                  fontWeight: isActive ? 500 : 400,
+                }}
               >
                 <span className="flex items-center justify-center w-4 shrink-0">
                   <CatIcon size={13} />
@@ -271,15 +336,15 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
           })}
         </div>
 
-        {/* ─── Main ─── */}
+        {/* Main */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
           <div className="px-5 pt-4 pb-1.5 shrink-0">
             <div className="flex items-center justify-between">
-              <h2 className="text-[11px] font-semibold text-gray-300 uppercase tracking-[0.12em]">
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: "var(--text-secondary)" }}>
                 {categories.find(c => c.id === activeCategory)?.label || "All"}
               </h2>
-              <span className="text-[10px] text-gray-200/20">{filteredApps.length} apps</span>
+              <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{filteredApps.length} apps</span>
             </div>
           </div>
 
@@ -291,42 +356,54 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
                   key={id}
                   ref={(el) => { if (el) itemsRef.current.push(el); }}
                   onClick={() => handleOpenApp(id)}
-                  className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl hover:bg-white/[0.05] active:bg-white/[0.08] transition-all duration-150 group"
+                  className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl transition-all duration-150 group"
+                  style={{ color: "var(--text-secondary)" }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
                 >
                   <span className="flex items-center justify-center w-[28px] h-[28px] text-[18px] leading-none">{getAppIcon(id, "lg")}</span>
-                  <span className="text-[11px] font-medium text-gray-200/60 group-hover:text-gray-200/90 text-center leading-tight transition-colors truncate w-full">
+                  <span className="text-[11px] font-medium text-center leading-tight truncate w-full">
                     {title}
                   </span>
                 </button>
               ))}
               {filteredApps.length === 0 && (
-                <div className="col-span-3 text-center py-16 text-gray-200/20 text-xs">No results found</div>
+                <div className="col-span-3 text-center py-16 text-xs" style={{ color: "var(--text-muted)" }}>No results found</div>
               )}
             </div>
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between px-4 py-[9px] border-t border-white/[0.04] bg-white/[0.015] shrink-0">
+          <div
+            className="flex items-center justify-between px-4 py-[9px] shrink-0"
+            style={{ borderTop: "1px solid var(--border)" }}
+          >
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center text-[10px] font-bold text-gray-200 shadow-lg shadow-black/20">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center text-[10px] font-bold text-white shadow-lg">
                 YJ
               </div>
               <div className="text-left leading-tight">
-                <div className="text-xs font-medium text-gray-200/65">Yuki</div>
-                <div className="text-[9px] text-gray-200/25">Online</div>
+                <div className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Yuki</div>
+                <div className="text-[9px]" style={{ color: "var(--text-muted)" }}>Online</div>
               </div>
             </div>
             <div className="flex items-center gap-0.5">
               <button
                 onClick={() => { handleOpenApp("settings"); }}
-                className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-300 hover:text-gray-200/60 transition-all duration-150"
+                className="p-2 rounded-lg transition-all duration-150"
+                style={{ color: "var(--text-muted)" }}
+                onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
                 title="Settings"
               >
                 <FaCog size={12} />
               </button>
               <button
                 onClick={() => { window.location.reload(); }}
-                className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-300 hover:text-gray-200/60 transition-all duration-150"
+                className="p-2 rounded-lg transition-all duration-150"
+                style={{ color: "var(--text-muted)" }}
+                onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+                onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
                 title="Restart"
               >
                 <FaPowerOff size={12} />
@@ -338,6 +415,7 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
     </div>
   );
 }
+
 export default function TopPanel() {
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
@@ -430,7 +508,7 @@ export default function TopPanel() {
 
   return (
     <>
-      {/* ── Panel bar ── */}
+      {/* Panel bar */}
       <div
         data-gsap="top-panel"
         className="fixed top-0 left-0 right-0 z-[50] flex items-center px-2 text-xs select-none"
@@ -443,12 +521,15 @@ export default function TopPanel() {
           color: "var(--panel-text)",
         }}
       >
-        {/* ── LEFT: Application Launcher ── */}
+        {/* LEFT: Application Launcher */}
         <button
           onClick={() => { setStartMenuOpen(true); setSearchQuery(""); setActiveCategory("favorites"); }}
           onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.08, duration: 0.15, ease: "back.out(1.5)" })}
           onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
-          className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-white/[0.06] active:bg-white/[0.1] transition-all duration-150"
+          className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-150"
+          style={{ color: "var(--panel-text)" }}
+          onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; }}
+          onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; }}
           title="Applications"
         >
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -464,7 +545,7 @@ export default function TopPanel() {
           </svg>
         </button>
 
-        {/* ── CENTER: KDE Icons-Only Task Manager ── */}
+        {/* CENTER: Task Manager */}
         <div className="flex items-center gap-0.5 flex-1 overflow-x-auto hide-scrollbar mx-1" style={{ height: 36 }}>
           {openWindows.map((w) => {
             const isActive = w.id === focusedWindowId;
@@ -482,24 +563,14 @@ export default function TopPanel() {
                   }, 600);
                 }}
                 onMouseLeave={() => { if (previewTimer.current) clearTimeout(previewTimer.current); setHoverPreview(null); }}
-                className="relative flex items-center gap-2.5 px-3 rounded-md transition-all duration-100 shrink-0 group"
+                className="relative flex items-center gap-2.5 px-3 rounded-md transition-all duration-100 shrink-0"
                 style={{
                   height: 32,
                   background: isActive ? "var(--accent-light)" : "transparent",
                   color: isActive ? "var(--accent)" : isMin ? "var(--text-muted)" : "var(--text-secondary)",
                 }}
-                onMouseOver={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = "var(--bg-surface)";
-                    e.currentTarget.style.color = "var(--text-primary)";
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = isMin ? "var(--text-muted)" : "var(--text-secondary)";
-                  }
-                }}
+                onMouseOver={(e) => { if (!isActive) { e.currentTarget.style.background = "var(--bg-surface)"; e.currentTarget.style.color = "var(--text-primary)"; } }}
+                onMouseOut={(e) => { if (!isActive) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = isMin ? "var(--text-muted)" : "var(--text-secondary)"; } }}
               >
                 <span className="text-sm shrink-0 leading-none">{getSmallIcon(w.icon)}</span>
                 <span className="truncate max-w-[80px] text-[11px] font-medium">{w.title}</span>
@@ -526,26 +597,35 @@ export default function TopPanel() {
         )}
 
         {hoverPreview && (
-          <div className="fixed z-[9999] rounded-xl shadow-2xl border border-white/10 overflow-hidden p-3 pointer-events-none"
-            style={{ left: hoverPreview.x, top: hoverPreview.y, minWidth: 140, background: "rgba(15, 15, 30, 0.95)", backdropFilter: "blur(24px)" }}>
+          <div
+            className="fixed z-[9999] rounded-xl shadow-2xl overflow-hidden p-3 pointer-events-none"
+            style={{
+              left: hoverPreview.x,
+              top: hoverPreview.y,
+              minWidth: 140,
+              background: "var(--window-bg)",
+              border: "1px solid var(--border)",
+              backdropFilter: "blur(24px)",
+            }}
+          >
             <div className="flex items-center gap-2.5">
               <span className="text-lg">{getSmallIcon(hoverPreview.icon)}</span>
               <div>
-                <div className="text-xs font-medium text-gray-200/80">{hoverPreview.title}</div>
-                <div className="text-[8px] text-gray-300 mt-0.5">{hoverPreview.app || "Window"}</div>
+                <div className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>{hoverPreview.title}</div>
+                <div className="text-[8px] mt-0.5" style={{ color: "var(--text-muted)" }}>{hoverPreview.app || "Window"}</div>
               </div>
             </div>
           </div>
         )}
 
-        {/* ── RIGHT: System tray ── */}
+        {/* RIGHT: System tray */}
         <div ref={trayRef} className="flex items-center gap-0.5 shrink-0 ml-auto">
           {/* YJ Avatar */}
           <button
             onClick={(e) => { const rect = e.currentTarget.getBoundingClientRect(); spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2); }}
             onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.12, rotate: -5, duration: 0.2, ease: "back.out(1.7)" })}
             onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, rotate: 0, duration: 0.2, ease: "power2.out" })}
-            className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-rose-600 hover:from-orange-400 hover:to-rose-500 flex items-center justify-center text-[9px] font-bold text-gray-200 transition-all duration-150 mr-1"
+            className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-rose-600 hover:from-orange-400 hover:to-rose-500 flex items-center justify-center text-[9px] font-bold text-white transition-all duration-150 mr-1"
             title="Click for confetti!"
           >YJ</button>
 
@@ -555,7 +635,10 @@ export default function TopPanel() {
               onClick={() => { setShowVolume(!showVolume); setShowWifi(false); setShowBattery(false); setShowCalendar(false); }}
               onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.08, duration: 0.15, ease: "back.out(1.5)" })}
               onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
-              className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.1] transition-all duration-150"
+              className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-150"
+              style={{ color: "var(--panel-text)" }}
+              onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; }}
               title={`Volume: ${volume}%`}
             >
               <VolumeIcon size={15} style={{ display: "block" }} />
@@ -563,18 +646,18 @@ export default function TopPanel() {
             {showVolume && (
               <SystemTrayPopup title="Volume">
                 <div className="flex items-center gap-2.5">
-                  <button onClick={handleMuteToggle} className="text-gray-200/50 hover:text-gray-200/80 transition-colors shrink-0">
+                  <button onClick={handleMuteToggle} className="transition-colors shrink-0" style={{ color: "var(--text-secondary)" }}>
                     {muted || volume === 0 ? <FiVolumeX size={15} /> : volume < 50 ? <FiVolume1 size={15} /> : <FiVolume2 size={15} />}
                   </button>
                   <div className="relative flex-1 flex items-center" style={{ height: 20 }}>
-                    <div className="absolute inset-x-0 rounded-full" style={{ height: 3, background: "rgba(255,255,255,0.08)" }} />
+                    <div className="absolute inset-x-0 rounded-full" style={{ height: 3, background: "var(--border)" }} />
                     <div className="absolute left-0 rounded-full" style={{ height: 3, width: `${displayVolume}%`, background: "var(--accent)", transition: "width 0.08s" }} />
                     <input
                       type="range" min="0" max="100" value={volume} onChange={handleVolumeChange}
                       style={{ position: "relative", width: "100%", margin: 0, appearance: "none", WebkitAppearance: "none", background: "transparent", cursor: "pointer", height: 20 }}
                     />
                   </div>
-                  <span className="text-[10px] text-gray-200/40 w-6 text-right shrink-0 font-mono">{displayVolume}</span>
+                  <span className="text-[10px] w-6 text-right shrink-0 font-mono" style={{ color: "var(--text-muted)" }}>{displayVolume}</span>
                 </div>
                 <style>{`
                   input[type=range]::-webkit-slider-thumb {
@@ -597,7 +680,10 @@ export default function TopPanel() {
               onClick={() => { setShowWifi(!showWifi); setShowVolume(false); setShowBattery(false); setShowCalendar(false); }}
               onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.08, duration: 0.15, ease: "back.out(1.5)" })}
               onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
-              className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.1] transition-all duration-150"
+              className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-150"
+              style={{ color: "var(--panel-text)" }}
+              onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; }}
               title={network.connected ? "Connected" : "Offline"}
             >
               <WifiBars strength={network.strength} connected={network.connected} />
@@ -607,14 +693,14 @@ export default function TopPanel() {
                 <div className="space-y-2">
                   {["Status", "IP Address", "Signal", "Type"].map((label, i) => {
                     const vals = [
-                      <span key="s" className={network.connected ? "text-green-400" : "text-red-400"}>{network.connected ? "Connected" : "Offline"}</span>,
-                      <span key="ip" className="text-gray-200/60 font-mono text-[10px]">{network.ip}</span>,
-                      <span key="sig" className="text-gray-200/60">{network.connected ? `${network.strength}% — ${network.strength >= 70 ? "Excellent" : network.strength >= 40 ? "Good" : "Weak"}` : "—"}</span>,
-                      <span key="t" className="text-gray-200/60">{network.type}</span>,
+                      <span key="s" style={{ color: network.connected ? "#4ade80" : "#f87171" }}>{network.connected ? "Connected" : "Offline"}</span>,
+                      <span key="ip" className="font-mono text-[10px]" style={{ color: "var(--text-secondary)" }}>{network.ip}</span>,
+                      <span key="sig" style={{ color: "var(--text-secondary)" }}>{network.connected ? `${network.strength}% — ${network.strength >= 70 ? "Excellent" : network.strength >= 40 ? "Good" : "Weak"}` : "—"}</span>,
+                      <span key="t" style={{ color: "var(--text-secondary)" }}>{network.type}</span>,
                     ];
                     return (
                       <div key={label} className="flex items-center justify-between">
-                        <span className="text-gray-200/40 text-[10px]">{label}</span>
+                        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{label}</span>
                         <span className="text-[11px]">{vals[i]}</span>
                       </div>
                     );
@@ -630,7 +716,10 @@ export default function TopPanel() {
               onClick={() => { setShowBattery(!showBattery); setShowVolume(false); setShowWifi(false); setShowCalendar(false); }}
               onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.08, duration: 0.15, ease: "back.out(1.5)" })}
               onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
-              className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.1] transition-all duration-150"
+              className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-150"
+              style={{ color: "var(--panel-text)" }}
+              onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; }}
               title={`${battery.level}% ${battery.charging ? "(charging)" : ""}`}
             >
               <BatteryBar level={battery.level} charging={battery.charging} />
@@ -639,26 +728,26 @@ export default function TopPanel() {
               <SystemTrayPopup title="Power">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-200/40 text-[10px]">Charge</span>
+                    <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>Charge</span>
                     <span className="text-[11px] font-medium" style={{ color: battery.level <= 20 ? "#f87171" : battery.level <= 40 ? "#fbbf24" : "#4ade80" }}>{battery.level}%</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-200/40 text-[10px]">State</span>
-                    <span className="text-gray-200/60 text-[11px]">{battery.charging ? "Charging" : "Discharging"}</span>
+                    <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>State</span>
+                    <span className="text-[11px]" style={{ color: "var(--text-secondary)" }}>{battery.charging ? "Charging" : "Discharging"}</span>
                   </div>
                   {battery.charging && battery.timeToFull && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-200/40 text-[10px]">Full in</span>
-                      <span className="text-gray-200/60 text-[11px]">~{battery.timeToFull}</span>
+                      <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>Full in</span>
+                      <span className="text-[11px]" style={{ color: "var(--text-secondary)" }}>~{battery.timeToFull}</span>
                     </div>
                   )}
                   {!battery.charging && battery.timeLeft && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-200/40 text-[10px]">Remaining</span>
-                      <span className="text-gray-200/60 text-[11px]">~{battery.timeLeft}</span>
+                      <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>Remaining</span>
+                      <span className="text-[11px]" style={{ color: "var(--text-secondary)" }}>~{battery.timeLeft}</span>
                     </div>
                   )}
-                  <div className="rounded-full overflow-hidden" style={{ height: 3, background: "rgba(255,255,255,0.06)" }}>
+                  <div className="rounded-full overflow-hidden" style={{ height: 3, background: "var(--border)" }}>
                     <div className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${battery.level}%`, background: battery.level <= 20 ? "#f87171" : battery.level <= 40 ? "#fbbf24" : "#4ade80" }} />
                   </div>
@@ -673,17 +762,19 @@ export default function TopPanel() {
               onClick={() => setShowCalendar(!showCalendar)}
               onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.05, duration: 0.15, ease: "back.out(1.5)" })}
               onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
-              className="flex flex-col items-end justify-center px-2.5 h-9 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.1] transition-all duration-150 ml-0.5"
+              className="flex flex-col items-end justify-center px-2.5 h-9 rounded-lg transition-all duration-150 ml-0.5"
+              onMouseOver={(e) => { e.currentTarget.style.background = "var(--bg-surface)"; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = "transparent"; }}
             >
-              <span className="text-[12px] font-medium leading-none text-gray-200/85">{time}</span>
-              <span className="text-[8px] mt-0.5 text-gray-200/40">{date}</span>
+              <span className="text-[12px] font-medium leading-none" style={{ color: "var(--panel-text)" }}>{time}</span>
+              <span className="text-[8px] mt-0.5" style={{ color: "var(--text-secondary)" }}>{date}</span>
             </button>
             {showCalendar && <CalendarPopup onClose={() => setShowCalendar(false)} />}
           </div>
         </div>
       </div>
 
-      {/* ════ START MENU ════ */}
+      {/* START MENU */}
       {startMenuOpen && (
         <ApplicationsMenu
           searchQuery={searchQuery}

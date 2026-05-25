@@ -1,65 +1,51 @@
 const projects = [
   {
     name: "FitVR",
-    desc: "VR fitness game built in Unity 6 with modular architecture.",
+    desc: "Multiplayer VR fitness platform built in Unity 6 with modular architecture.",
     tags: ["Unity", "C#", "VR", "OpenXR"],
-    href: "https://github.com/YoussefJarray/FitVR",
+    href: "https://github.com/YoussefJarray/FitVR-Backup",
     color: "#f97316",
     readme: `# FitVR
 
-A virtual reality fitness game built with **Unity 6**. Players exercise through mini-games while tracking calories, time, and progress.
-
-## Architecture
-
-The project is organized into four core modules:
-
-- **Core** — Game loop, session management, scoring, and audio
-- **MiniGames** — A pluggable mini-game system. Each exercise is a self-contained scene implementing a common interface
-- **Lobby** — Player hub with stats, customization, and settings
-- **Services** — Persistence layer, achievements, and leaderboards
-
-## Key Implementation
-
-\`\`\`csharp
-public interface IMiniGame
-{
-    string GameName { get; }
-    void StartGame();
-    void EndGame();
-    int CalculateScore(float accuracy, float time);
-}
-
-public class PunchGame : MonoBehaviour, IMiniGame
-{
-    public string GameName => "Punch Rhythm";
-
-    public void StartGame()
-    {
-        SpawnTargets();
-        StartCoroutine(GameTimer());
-    }
-
-    public int CalculateScore(float accuracy, float time)
-    {
-        float baseScore = accuracy * 1000;
-        float timeBonus = Mathf.Max(0, 300 - time * 10);
-        return Mathf.RoundToInt(baseScore + timeBonus);
-    }
-}
-\`\`\`
+A **multiplayer virtual reality fitness platform** built in Unity 6. FitVR combines immersive mini-games with real workout routines, letting users exercise together in shared virtual environments — making fitness social, fun, and effective.
 
 ## Tech Stack
 
-- **Unity 6** with Universal Render Pipeline
-- **OpenXR** for cross-platform VR support
-- **SteamVR** for room-scale tracking
-- **FMOD** for spatial audio
+- **Unity 6000.3.8f1** with Universal Render Pipeline
+- **OpenXR** for cross-platform VR headset support
+- **C#** for all game logic, interfaces, and services
+- **ShaderLab / HLSL** for custom VR-optimized shaders
+- **Unity Netcode** for multiplayer session management
+
+## The Problem
+
+Most fitness apps are solo experiences. You open an app, follow a workout, and close it. There's no social element, no shared space, nothing to keep you coming back. FitVR set out to fix that by making exercise something you do *with* people — in a virtual environment that makes you forget you're working out.
+
+The bigger challenge was technical: VR is unforgiving. A frame rate drop doesn't just look bad, it makes people physically sick. Every decision — from how many objects are in a scene to how shaders are written — had to be made with performance as the top constraint.
+
+## What It Does
+
+Players join a shared lobby and choose from a set of fitness mini-games designed around natural full-body movement. The games track effort and score players based on accuracy and timing, turning a workout into something competitive and fun. Progress and session data are saved per user behind a secure authentication system.
+
+The mini-game system is fully modular — each exercise is a self-contained scene. Adding a new workout doesn't require touching any existing code, which kept the project easy to expand as the team added content throughout the semester.
 
 ## Challenges
 
-VR development comes with unique constraints. Maintaining **90fps** requires aggressive optimization: GPU instancing, LOD groups, occlusion culling, and single-pass instanced rendering.
+Hitting consistent 90fps on VR hardware with a multiplayer game running is genuinely hard. We had to be aggressive: GPU instancing for repeated objects, LOD groups on every mesh, baked occlusion culling per scene, and single-pass instanced rendering to cut draw calls in half. Profiling became a daily habit rather than an afterthought.
 
-*"The hardest part wasn't the gameplay — it was making sure players didn't get motion sick."*`,
+Multiplayer added another layer — syncing player state across a session without introducing jitter or desync required careful thought about what data actually needs to be authoritative versus what can be predicted client-side.
+
+Motion sickness was also a constant concern. We added vignetting during fast movement, snap turning as an option, and teleportation as an alternative locomotion mode. Playtesting revealed issues no amount of code review would catch.
+
+## Takeaways
+
+VR forces you to care about performance in a way most platforms don't. You can't ship and patch later — a laggy experience is a nausea-inducing experience. I came away with a much deeper understanding of Unity's rendering pipeline, and a healthy respect for how much work goes into making something feel comfortable to wear.
+
+Working in a team with a strict modular architecture also taught me the value of enforced boundaries. Because Core could never depend on other modules, we never had circular dependencies or mysterious breakages when someone changed a feature.
+
+## Role
+
+**Game Developer** — 2025 — **School Project**`,
   },
   {
     name: "ModelShare",
@@ -80,7 +66,11 @@ Built for my university project, ModelShare provides a browser-based environment
 - **PHP** — Custom backend for asset orchestration and session handling
 - **Tailwind CSS** — Utility-first interface for creative workflows
 
-## Features
+## The Problem
+
+3D artists don't have a great home on the web. Existing platforms either lock previews behind downloads or offer no inspection tools at all — you're flying blind until you open the file in your software. ModelShare was built around the idea that a 3D asset should be fully explorable in the browser before you ever download it.
+
+## What It Does
 
 ### Technical Inspector
 
@@ -106,113 +96,117 @@ The database stores detailed model metadata and versioning, creating a complete 
 
 ![Ecosystem](/ms4.png)
 
+## Challenges
+
+Getting Three.js to load arbitrary user-uploaded models reliably was messier than expected. Different exporters produce subtly broken glTF files — missing normals, incorrect bone weights, non-standard material setups. The inspector had to handle all of it gracefully without crashing or showing the user a blank viewport.
+
+On the backend, handling large binary uploads through PHP while keeping response times reasonable required careful chunking and progress tracking. The asset pipeline — upload, process, store, serve — had more edge cases than anticipated.
+
+## Takeaways
+
+Building a full-stack app solo from scratch teaches you to respect the boundaries between layers. Every time I cut a corner on the PHP API, I paid for it on the Angular side. I also learned that user-generated content is unpredictable in ways that unit tests can't fully cover — real-world files from real artists broke things in ways I never would have thought to test for.
+
 ## Role
 
 **Full Stack Developer** — 2024 — **University Project**`,
   },
   {
     name: "Taskr",
-    desc: "Full-featured todo app with drag-and-drop, persistence, and keyboard shortcuts.",
-    tags: ["React", "Vite", "JavaScript", "Tailwind"],
+    desc: "Modern task management app with collections, Kanban board, and GSAP-powered animations.",
+    tags: ["React", "Vite", "GSAP", "Tailwind"],
     href: "https://github.com/YoussefJarray/Taskr",
     color: "#14b8a6",
     readme: `# Taskr
 
-A minimal, full-featured todo application built with **React** and **Vite**.
+A modern task management app built with **React** and **Vite**. Taskr goes beyond a simple todo list — it's a full productivity environment with collections, a Kanban board, and a glassmorphic dark UI powered by GSAP animations.
 
-## Features
+## Tech Stack
 
-- Create, edit, and delete tasks
-- **Drag-and-drop** reordering with smooth animations
-- Local storage persistence — your tasks survive reloads
-- Dark and light theme
-- Keyboard shortcuts for power users
+- **React 18** — Component architecture with hooks-based state
+- **Vite 4 (SWC)** — Near-instant dev server and optimized builds
+- **GSAP 3** — Entrance animations, micro-interactions, and page transitions
+- **Tailwind CSS** — Utility-first dark theme with glassmorphism
+- **@hello-pangea/dnd** — Accessible drag-and-drop for the Kanban board
+- **React Router v6** — Client-side routing between views
 
-## Usage
+## The Problem
 
-\`\`\`bash
-git clone https://github.com/YoussefJarray/Taskr
-cd Taskr
-npm install
-npm run dev
-\`\`\`
+Most todo apps are either too simple to be useful or too complex to stay organized in. I wanted something in between — an app that handles real organizational needs (grouping tasks, tracking status, seeing the big picture) without requiring a manual to use.
 
-## Architecture
+The secondary goal was to build something that *felt* good to use. A lot of productivity tools are functional but joyless. Taskr was a chance to explore what happens when you treat animation and polish as first-class features rather than afterthoughts.
 
-The app uses a simple state management pattern with React hooks:
+## What It Does
 
-\`\`\`javascript
-function useTasks() {
-  const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem("tasks");
-    return saved ? JSON.parse(saved) : [];
-  });
+Tasks can be created with a title, description, and priority level, then organized into color-coded **Collections** — basically folders for related work. A **Dashboard** view gives you an animated overview of total tasks, completion rate, and an SVG progress ring. The **Kanban board** lets you drag tasks between To Do, In Progress, and Done columns when you want a more visual workflow.
 
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+Everything saves to localStorage automatically, so nothing is lost on a reload.
 
-  const addTask = (title) => {
-    setTasks((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), title, done: false, createdAt: Date.now() },
-    ]);
-  };
+## Challenges
 
-  return { tasks, addTask, removeTask, toggleTask, reorderTasks };
-}
-\`\`\`
+GSAP and React don't always play nicely together. React owns the DOM, and GSAP wants to manipulate it directly — if you're not careful, React re-renders will undo your animations mid-flight or cause elements to flicker. I ended up using refs and careful lifecycle management to keep the two in sync.
 
-## What I Learned
+The drag-and-drop Kanban also required thought around optimistic UI updates. The state needs to reflect the new position immediately when you drop a card, before any async operations settle — otherwise the interaction feels sluggish and the card snaps back before moving to the right place.
 
-Building Taskr taught me the importance of **optimistic UI updates**. When dragging a task to reorder, the UI updates immediately before the state settles — this makes drag-and-drop feel instantaneous rather than laggy.`,
+## Takeaways
+
+Animation is a design tool, not a decoration. Used well, it communicates state changes and guides attention. Used badly, it just slows the user down. This project made me much more deliberate about *why* something animates, not just *how*.
+
+I also came away with a solid understanding of React's rendering model — knowing exactly when components re-render and how to prevent unnecessary ones became essential when animations were involved.
+
+## Role
+
+**Solo Developer** — 2024 — **Personal Project**`,
   },
-
   {
     name: "This Portfolio",
-    desc: "Linux desktop-inspired portfolio built with Next.js 13.",
+    desc: "KDE Linux desktop-inspired portfolio built with Next.js 13.",
     tags: ["Next.js", "Zustand", "Tailwind", "Framer Motion"],
     href: "https://github.com/YoussefJarray/YoussefJarray.github.io",
     color: "#f43f5e",
     readme: `# Portfolio
 
-A **GNOME Linux desktop**-inspired portfolio website. It's not a slideshow — it's a working environment.
-
-## Features
-
-- **Desktop metaphor** — Draggable windows, taskbar, system tray
-- **File manager** — Browse projects like real folders
-- **Interactive terminal** — Custom commands, command history, neofetch
-- **Music player** — Crossfading lo-fi tracks with a Spotify-grade UI
-- **Wallpaper & accent customization** — Pick from 3 wallpapers, colors adapt to dark/light mode
-- **Boot animation** — Linux-style startup with ESC skip
-- **Confetti** — Click the YJ button in the system tray
-
-## Architecture
-
-\`\`\`javascript
-// Each window is a React component registered in a map
-const appComponents = {
-  FileManager, Terminal, AboutApp,
-  SettingsApp, BrowserApp, PhotosApp, MarkdownViewer,
-};
-\`\`\`
-
-State is managed with **Zustand** stores:
-
-- \`windowStore\` — Open windows, focus, z-index
-- \`themeStore\` — Dark/light mode
-- \`iconStore\` — Desktop icon positions (persisted)
-- \`widgetStore\` — Widget positions and visibility
-- \`wallpaperStore\` — Selected wallpaper and accent color
+A **KDE Linux desktop**-inspired portfolio website deployed on GitHub Pages. It's not a page you scroll — it's a working environment you explore.
 
 ## Tech Stack
 
-- **Next.js 13** with App Router
-- **Zustand** for state management
-- **Tailwind CSS** with CSS variables for theming
-- **Framer Motion** for window animations
-- **Web Audio API** for music crossfading`,
+- **Next.js 13.4** with App Router for SSR and file-system routing
+- **React 18** for component architecture and portals
+- **Zustand 5** for lightweight, modular state management
+- **Framer Motion 10** for window animations and transitions
+- **Tailwind CSS** with CSS variables for full theming support
+- **GSAP** for advanced entrance animations
+- **wasm-doom** for an in-browser DOOM engine
+- **pdfjs-dist** for in-app PDF rendering
+
+## The Problem
+
+Portfolio websites are almost all the same. A hero section, a grid of projects, a contact form. They're functional but forgettable — and they say nothing about how you actually think or build things.
+
+I wanted a portfolio that was itself a demonstration of what I can do. Something that made people stop and actually interact with it, rather than skim it in 30 seconds. A Linux desktop environment felt like the right metaphor: familiar enough that anyone can navigate it, but surprising enough that people spend time exploring.
+
+## What It Does
+
+The portfolio is a fully functional desktop running in the browser. Windows open, resize, minimize, and stack on top of each other. A system tray in the top panel shows a live volume slider, WiFi indicator, battery monitor, and a calendar. The Start Menu lets you launch any of 16+ applications — including a working terminal with custom commands, a drawing app, a PDF viewer, a GitHub stats dashboard, and a full suite of games (DOOM, Pong, Sudoku, Minesweeper, and more).
+
+Desktop widgets — an analog clock, sticky note, cat widget, and music player — can be dragged anywhere and toggled from the Start Menu. Positions persist across sessions. Dark and light mode are fully supported, with system preference detection on first load.
+
+## Challenges
+
+The window manager was the hardest part to get right. Every window needs its own position, size, z-index, and open/minimize/maximize state — all managed globally so the taskbar and other windows can react to changes. Getting focus management right (clicking a window should always bring it to the front, clicking the taskbar should toggle it) required careful thought about event propagation.
+
+Running wasm-doom inside a React component in a Next.js app was its own adventure. The WASM module has opinions about the DOM that don't align with React's model, and sandboxing it inside a window that can be minimized or closed without crashing the rest of the page took significant effort.
+
+Performance was also a concern — a desktop with 10+ open windows, draggable widgets, and animated transitions can get heavy fast. Zustand's granular subscription model helped a lot: components only re-render when the specific slice of state they care about changes.
+
+## Takeaways
+
+This project pushed my frontend architecture further than anything else I've built. Managing a complex, stateful UI where dozens of independent pieces need to stay in sync taught me to think carefully about state ownership and update boundaries.
+
+It also reinforced something I already suspected: the most memorable projects are the ones that take an unexpected angle on a familiar problem. A portfolio is just a way to show your work — but *how* you show it is itself a statement.
+
+## Role
+
+**Full Stack Developer** — 2024–2025 — **Personal Project**`,
   },
 ];
 
