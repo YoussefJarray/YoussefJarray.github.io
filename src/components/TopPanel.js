@@ -154,7 +154,7 @@ function CalendarPopup({ onClose }) {
 
   return (
     <div className="absolute top-full right-0 mt-2 z-[200]" onClick={(e) => e.stopPropagation()}>
-      <div className="rounded-2xl shadow-2xl border border-white/10 overflow-hidden" style={{ width: 260, background: "rgba(15, 15, 30, 0.95)", backdropFilter: "blur(24px)" }}>
+      <div className="rounded-2xl shadow-2xl border border-white/10 overflow-hidden bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl" style={{ width: 260 }}>
         <div className="flex items-center justify-between px-4 pt-3 pb-1">
           <button onClick={() => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }} className="text-gray-200/40 hover:text-gray-200/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&lsaquo;</button>
           <span className="text-xs font-semibold text-gray-200/80">{monthName}</span>
