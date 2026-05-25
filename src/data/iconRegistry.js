@@ -36,14 +36,23 @@ function BreakoutIcon({ size }) {
 
 const sizes = { sm: 14, md: 22, lg: 28, xl: 36 };
 
-function PhotosIcon({ size, dark }) {
-  const stroke = dark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)";
-  const fill = dark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.15)";
+function PhotosIcon({ size }) {
   return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill={fill} stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="3" width="20" height="18" rx="2"/>
-      <circle cx="8.5" cy="8.5" r="1.5"/>
-      <path d="M21 15l-5-5L5 19"/>
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="none">
+      <defs>
+        <linearGradient id="photosGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B6B"/>
+          <stop offset="50%" stopColor="#FFA500"/>
+          <stop offset="100%" stopColor="#FFD700"/>
+        </linearGradient>
+      </defs>
+      {/* Frame */}
+      <rect x="2" y="3" width="20" height="18" rx="2" fill="url(#photosGrad)"/>
+      {/* Inner frame */}
+      <rect x="3.5" y="4.5" width="17" height="15" rx="1.5" fill="none" stroke="white" strokeWidth="1" opacity="0.8"/>
+      {/* Image content - mountain and sun */}
+      <circle cx="18" cy="7" r="1.8" fill="white" opacity="0.9"/>
+      <path d="M4 14L10 9L14 12L20 6" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.9"/>
     </svg>
   );
 }
@@ -160,7 +169,7 @@ const gameComponents = {
 };
 
 function renderIcon(id, pixelSize, dark) {
-  if (id === "photos") return <PhotosIcon size={pixelSize} dark={dark} />;
+  if (id === "photos") return <PhotosIcon size={pixelSize} />;
   const GameComp = gameComponents[id];
   if (GameComp) return <GameComp size={pixelSize} />;
   const BaseComp = baseIcons[id];

@@ -6,22 +6,10 @@ export const projects = [
     href: "https://github.com/YoussefJarray/FitVR",
   },
   {
-    title: "ModelShare",
-    desc: "Collaborative platform for sharing, discovering, and downloading 3D models with real-time preview. Built with Angular, Three.js, and PHP.",
-    tags: ["Angular", "Three.js", "PHP", "Tailwind"],
-    href: "https://github.com/YoussefJarray/modelshare",
-  },
-  {
     title: "Taskr",
     desc: "Full-featured todo app built with React / Vite.js with a clean, minimal interface.",
     tags: ["React", "Vite", "JavaScript"],
     href: "https://github.com/YoussefJarray/Taskr",
-  },
-  {
-    title: "DummyFight",
-    desc: "2D fighting game prototype built in Unity with C#. Features combo mechanics, health bars, and AI opponent.",
-    tags: ["Unity", "C#", "Game Dev"],
-    href: "https://github.com/YoussefJarray/DummyFight",
   },
   {
     title: "This Portfolio",
