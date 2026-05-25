@@ -24,6 +24,15 @@
 
 ## ✨ Features
 
+## 📂 Projects Overview
+
+- **FitVR** – A VR fitness game built with Unity 6, offering modular mini‑games, real‑time calorie tracking, and cross‑platform OpenXR support.
+- **ModelShare** – A collaborative platform for sharing, discovering, and downloading 3D models, featuring an Angular front‑end, Three.js preview, and PHP backend.
+- **Taskr** – A full‑featured to‑do app with drag‑and‑drop reordering, keyboard shortcuts, and persistent storage via local‑storage.
+- **Portfolio** – This very site, a Linux‑desktop‑inspired portfolio showcasing the above projects through an interactive desktop UI.
+
+
+
 ### 🪟 Desktop Environment
 - **Draggable windows** with minimize, maximize, and close controls
 - **Window manager** with z-index stacking and focus management
