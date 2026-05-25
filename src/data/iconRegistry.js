@@ -177,7 +177,7 @@ function renderIcon(id, pixelSize, dark) {
   return "\uD83D\uDCC4";
 }
 
-export function getAppIcon(id, size = "md", dark = true) {
+export function getAppIcon(id, size = "md", dark = false) {
   const px = sizes[size] || 22;
   return renderIcon(id, px, dark);
 }

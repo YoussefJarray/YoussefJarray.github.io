@@ -156,16 +156,16 @@ function CalendarPopup({ onClose }) {
     <div className="absolute top-full right-0 mt-2 z-[200]" onClick={(e) => e.stopPropagation()}>
       <div className="rounded-2xl shadow-2xl border border-white/10 overflow-hidden" style={{ width: 260, background: "rgba(15, 15, 30, 0.95)", backdropFilter: "blur(24px)" }}>
         <div className="flex items-center justify-between px-4 pt-3 pb-1">
-          <button onClick={() => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }} className="text-white/40 hover:text-white/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&lsaquo;</button>
-          <span className="text-xs font-semibold text-white/80">{monthName}</span>
-          <button onClick={() => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); }} className="text-white/40 hover:text-white/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&rsaquo;</button>
+          <button onClick={() => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }} className="text-gray-200/40 hover:text-gray-200/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&lsaquo;</button>
+          <span className="text-xs font-semibold text-gray-200/80">{monthName}</span>
+          <button onClick={() => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); }} className="text-gray-200/40 hover:text-gray-200/80 transition-colors text-sm w-6 h-6 flex items-center justify-center rounded hover:bg-white/5">&rsaquo;</button>
         </div>
         <div className="grid grid-cols-7 gap-0 px-4 pt-2">
-          {dayNames.map((d) => <div key={d} className="text-[9px] text-white/30 text-center h-6 flex items-center justify-center font-semibold tracking-wider uppercase">{d}</div>)}
+          {dayNames.map((d) => <div key={d} className="text-[9px] text-gray-300 text-center h-6 flex items-center justify-center font-semibold tracking-wider uppercase">{d}</div>)}
         </div>
         <div className="grid grid-cols-7 gap-0 px-4 pb-3">
           {days.map((d, i) => (
-            <div key={i} className={`text-xs text-center h-7 flex items-center justify-center rounded-lg transition-all ${d === null ? "" : isCurrentMonth && d === today ? "text-white font-bold" : "text-white/50 hover:text-white hover:bg-white/5 cursor-pointer"}`}
+            <div key={i} className={`text-xs text-center h-7 flex items-center justify-center rounded-lg transition-all ${d === null ? "" : isCurrentMonth && d === today ? "text-gray-200 font-bold" : "text-gray-200/50 hover:text-gray-200 hover:bg-white/5 cursor-pointer"}`}
               style={isCurrentMonth && d === today ? { background: "var(--accent)", boxShadow: "0 2px 8px rgba(59,130,246,0.3)" } : {}}
             >
               {d || ""}
@@ -181,7 +181,7 @@ function SystemTrayPopup({ title, children }) {
   return (
     <div className="absolute top-full mt-2 z-[200]" style={{ right: 0 }}>
       <div className="rounded-xl shadow-2xl border border-white/10 overflow-hidden p-3" style={{ width: 220, background: "rgba(15, 15, 30, 0.95)", backdropFilter: "blur(24px)" }}>
-        <div className="text-[9px] text-white/30 uppercase tracking-[0.15em] font-semibold mb-2.5">{title}</div>
+        <div className="text-[9px] text-gray-300 uppercase tracking-[0.15em] font-semibold mb-2.5">{title}</div>
         {children}
       </div>
     </div>
@@ -238,13 +238,13 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
           <div ref={sidebarRef} className="w-[164px] shrink-0 flex flex-col p-3 gap-1 border-r border-white/[0.05] bg-white/[0.015]">
           {/* Search */}
           <div className="flex items-center gap-2.5 bg-white/[0.05] rounded-xl px-3 h-9 border border-white/[0.04] transition-all duration-200 focus-within:border-[var(--accent)]/30 focus-within:bg-white/[0.07] mb-2">
-            <FiSearch size={13} className="text-white/25 shrink-0" />
+            <FiSearch size={13} className="text-gray-200/25 shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search..."
-              className="flex-1 bg-transparent outline-none text-xs text-white/60 placeholder-white/20"
+              className="flex-1 bg-transparent outline-none text-xs text-gray-200/60 placeholder-white/20"
               autoFocus
             />
           </div>
@@ -258,8 +258,8 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
                 onClick={() => setActiveCategory(cat.id)}
                 className={`flex items-center gap-2.5 w-full px-3 py-[7px] rounded-lg text-xs transition-all duration-150 ${
                   isActive
-                    ? "bg-white/[0.09] text-white font-medium"
-                    : "text-white/35 hover:text-white/60 hover:bg-white/[0.04]"
+                    ? "bg-white/[0.09] text-gray-200 font-medium"
+                    : "text-gray-200/35 hover:text-gray-200/60 hover:bg-white/[0.04]"
                 }`}
               >
                 <span className="flex items-center justify-center w-4 shrink-0">
@@ -276,10 +276,10 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
           {/* Header */}
           <div className="px-5 pt-4 pb-1.5 shrink-0">
             <div className="flex items-center justify-between">
-              <h2 className="text-[11px] font-semibold text-white/30 uppercase tracking-[0.12em]">
+              <h2 className="text-[11px] font-semibold text-gray-300 uppercase tracking-[0.12em]">
                 {categories.find(c => c.id === activeCategory)?.label || "All"}
               </h2>
-              <span className="text-[10px] text-white/20">{filteredApps.length} apps</span>
+              <span className="text-[10px] text-gray-200/20">{filteredApps.length} apps</span>
             </div>
           </div>
 
@@ -294,13 +294,13 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
                   className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl hover:bg-white/[0.05] active:bg-white/[0.08] transition-all duration-150 group"
                 >
                   <span className="flex items-center justify-center w-[28px] h-[28px] text-[18px] leading-none">{getAppIcon(id, "lg")}</span>
-                  <span className="text-[11px] font-medium text-white/60 group-hover:text-white/90 text-center leading-tight transition-colors truncate w-full">
+                  <span className="text-[11px] font-medium text-gray-200/60 group-hover:text-gray-200/90 text-center leading-tight transition-colors truncate w-full">
                     {title}
                   </span>
                 </button>
               ))}
               {filteredApps.length === 0 && (
-                <div className="col-span-3 text-center py-16 text-white/20 text-xs">No results found</div>
+                <div className="col-span-3 text-center py-16 text-gray-200/20 text-xs">No results found</div>
               )}
             </div>
           </div>
@@ -308,25 +308,25 @@ function ApplicationsMenu({ searchQuery, activeCategory, setSearchQuery, setActi
           {/* Footer */}
           <div className="flex items-center justify-between px-4 py-[9px] border-t border-white/[0.04] bg-white/[0.015] shrink-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-black/20">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center text-[10px] font-bold text-gray-200 shadow-lg shadow-black/20">
                 YJ
               </div>
               <div className="text-left leading-tight">
-                <div className="text-xs font-medium text-white/65">Yuki</div>
-                <div className="text-[9px] text-white/25">Online</div>
+                <div className="text-xs font-medium text-gray-200/65">Yuki</div>
+                <div className="text-[9px] text-gray-200/25">Online</div>
               </div>
             </div>
             <div className="flex items-center gap-0.5">
               <button
                 onClick={() => { handleOpenApp("settings"); }}
-                className="p-2 rounded-lg hover:bg-white/[0.06] text-white/30 hover:text-white/60 transition-all duration-150"
+                className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-300 hover:text-gray-200/60 transition-all duration-150"
                 title="Settings"
               >
                 <FaCog size={12} />
               </button>
               <button
                 onClick={() => { window.location.reload(); }}
-                className="p-2 rounded-lg hover:bg-white/[0.06] text-white/30 hover:text-white/60 transition-all duration-150"
+                className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-300 hover:text-gray-200/60 transition-all duration-150"
                 title="Restart"
               >
                 <FaPowerOff size={12} />
@@ -531,8 +531,8 @@ export default function TopPanel() {
             <div className="flex items-center gap-2.5">
               <span className="text-lg">{getSmallIcon(hoverPreview.icon)}</span>
               <div>
-                <div className="text-xs font-medium text-white/80">{hoverPreview.title}</div>
-                <div className="text-[8px] text-white/30 mt-0.5">{hoverPreview.app || "Window"}</div>
+                <div className="text-xs font-medium text-gray-200/80">{hoverPreview.title}</div>
+                <div className="text-[8px] text-gray-300 mt-0.5">{hoverPreview.app || "Window"}</div>
               </div>
             </div>
           </div>
@@ -545,7 +545,7 @@ export default function TopPanel() {
             onClick={(e) => { const rect = e.currentTarget.getBoundingClientRect(); spawnConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2); }}
             onMouseEnter={(e) => gsap.to(e.currentTarget, { scale: 1.12, rotate: -5, duration: 0.2, ease: "back.out(1.7)" })}
             onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, rotate: 0, duration: 0.2, ease: "power2.out" })}
-            className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-rose-600 hover:from-orange-400 hover:to-rose-500 flex items-center justify-center text-[9px] font-bold text-white transition-all duration-150 mr-1"
+            className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-500 to-rose-600 hover:from-orange-400 hover:to-rose-500 flex items-center justify-center text-[9px] font-bold text-gray-200 transition-all duration-150 mr-1"
             title="Click for confetti!"
           >YJ</button>
 
@@ -563,7 +563,7 @@ export default function TopPanel() {
             {showVolume && (
               <SystemTrayPopup title="Volume">
                 <div className="flex items-center gap-2.5">
-                  <button onClick={handleMuteToggle} className="text-white/50 hover:text-white/80 transition-colors shrink-0">
+                  <button onClick={handleMuteToggle} className="text-gray-200/50 hover:text-gray-200/80 transition-colors shrink-0">
                     {muted || volume === 0 ? <FiVolumeX size={15} /> : volume < 50 ? <FiVolume1 size={15} /> : <FiVolume2 size={15} />}
                   </button>
                   <div className="relative flex-1 flex items-center" style={{ height: 20 }}>
@@ -574,7 +574,7 @@ export default function TopPanel() {
                       style={{ position: "relative", width: "100%", margin: 0, appearance: "none", WebkitAppearance: "none", background: "transparent", cursor: "pointer", height: 20 }}
                     />
                   </div>
-                  <span className="text-[10px] text-white/40 w-6 text-right shrink-0 font-mono">{displayVolume}</span>
+                  <span className="text-[10px] text-gray-200/40 w-6 text-right shrink-0 font-mono">{displayVolume}</span>
                 </div>
                 <style>{`
                   input[type=range]::-webkit-slider-thumb {
@@ -608,13 +608,13 @@ export default function TopPanel() {
                   {["Status", "IP Address", "Signal", "Type"].map((label, i) => {
                     const vals = [
                       <span key="s" className={network.connected ? "text-green-400" : "text-red-400"}>{network.connected ? "Connected" : "Offline"}</span>,
-                      <span key="ip" className="text-white/60 font-mono text-[10px]">{network.ip}</span>,
-                      <span key="sig" className="text-white/60">{network.connected ? `${network.strength}% — ${network.strength >= 70 ? "Excellent" : network.strength >= 40 ? "Good" : "Weak"}` : "—"}</span>,
-                      <span key="t" className="text-white/60">{network.type}</span>,
+                      <span key="ip" className="text-gray-200/60 font-mono text-[10px]">{network.ip}</span>,
+                      <span key="sig" className="text-gray-200/60">{network.connected ? `${network.strength}% — ${network.strength >= 70 ? "Excellent" : network.strength >= 40 ? "Good" : "Weak"}` : "—"}</span>,
+                      <span key="t" className="text-gray-200/60">{network.type}</span>,
                     ];
                     return (
                       <div key={label} className="flex items-center justify-between">
-                        <span className="text-white/40 text-[10px]">{label}</span>
+                        <span className="text-gray-200/40 text-[10px]">{label}</span>
                         <span className="text-[11px]">{vals[i]}</span>
                       </div>
                     );
@@ -639,23 +639,23 @@ export default function TopPanel() {
               <SystemTrayPopup title="Power">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-white/40 text-[10px]">Charge</span>
+                    <span className="text-gray-200/40 text-[10px]">Charge</span>
                     <span className="text-[11px] font-medium" style={{ color: battery.level <= 20 ? "#f87171" : battery.level <= 40 ? "#fbbf24" : "#4ade80" }}>{battery.level}%</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-white/40 text-[10px]">State</span>
-                    <span className="text-white/60 text-[11px]">{battery.charging ? "Charging" : "Discharging"}</span>
+                    <span className="text-gray-200/40 text-[10px]">State</span>
+                    <span className="text-gray-200/60 text-[11px]">{battery.charging ? "Charging" : "Discharging"}</span>
                   </div>
                   {battery.charging && battery.timeToFull && (
                     <div className="flex items-center justify-between">
-                      <span className="text-white/40 text-[10px]">Full in</span>
-                      <span className="text-white/60 text-[11px]">~{battery.timeToFull}</span>
+                      <span className="text-gray-200/40 text-[10px]">Full in</span>
+                      <span className="text-gray-200/60 text-[11px]">~{battery.timeToFull}</span>
                     </div>
                   )}
                   {!battery.charging && battery.timeLeft && (
                     <div className="flex items-center justify-between">
-                      <span className="text-white/40 text-[10px]">Remaining</span>
-                      <span className="text-white/60 text-[11px]">~{battery.timeLeft}</span>
+                      <span className="text-gray-200/40 text-[10px]">Remaining</span>
+                      <span className="text-gray-200/60 text-[11px]">~{battery.timeLeft}</span>
                     </div>
                   )}
                   <div className="rounded-full overflow-hidden" style={{ height: 3, background: "rgba(255,255,255,0.06)" }}>
@@ -675,8 +675,8 @@ export default function TopPanel() {
               onMouseLeave={(e) => gsap.to(e.currentTarget, { scale: 1, duration: 0.12 })}
               className="flex flex-col items-end justify-center px-2.5 h-9 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.1] transition-all duration-150 ml-0.5"
             >
-              <span className="text-[12px] font-medium leading-none text-white/85">{time}</span>
-              <span className="text-[8px] mt-0.5 text-white/40">{date}</span>
+              <span className="text-[12px] font-medium leading-none text-gray-200/85">{time}</span>
+              <span className="text-[8px] mt-0.5 text-gray-200/40">{date}</span>
             </button>
             {showCalendar && <CalendarPopup onClose={() => setShowCalendar(false)} />}
           </div>
