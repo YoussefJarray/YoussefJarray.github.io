@@ -167,61 +167,7 @@ function useTasks() {
 
 Building Taskr taught me the importance of **optimistic UI updates**. When dragging a task to reorder, the UI updates immediately before the state settles — this makes drag-and-drop feel instantaneous rather than laggy.`,
   },
-  {
-    name: "DummyFight",
-    desc: "2D fighting game with combo mechanics, health bars, and AI opponent.",
-    tags: ["Unity", "C#", "Game Dev"],
-    href: "https://github.com/YoussefJarray/DummyFight",
-    color: "#ef4444",
-    readme: `# DummyFight
 
-A 2D fighting game prototype built in **Unity** with **C#**.
-
-## Features
-
-- **Combo system** — Chain attacks for increased damage
-- **Health bars** — Visual feedback for player and enemy health
-- **AI opponent** — Basic enemy AI with attack patterns and blocking
-- **Multiple characters** — Each with unique move sets
-- **Round-based combat** — Best of 3 rounds
-
-## Architecture
-
-The game uses a state-machine pattern for character behavior:
-
-\`\`\`csharp
-public enum FighterState { Idle, Walking, Attacking, Hit, Blocking, KO }
-
-public class Fighter : MonoBehaviour
-{
-    public FighterState State { get; private set; }
-    public float Health;
-    public ComboCounter Combo;
-
-    public void TakeDamage(float amount)
-    {
-        Health -= amount;
-        if (Health <= 0)
-            TransitionTo(FighterState.KO);
-        else
-            TransitionTo(FighterState.Hit);
-    }
-
-    private void TransitionTo(FighterState newState)
-    {
-        State = newState;
-        // Trigger animations, reset timers, etc.
-    }
-}
-\`\`\`
-
-## Controls
-
-- **Arrow keys** — Move
-- **A/S/D** — Punch, Kick, Special
-- **Space** — Block
-- **Shift** — Dash`,
-  },
   {
     name: "This Portfolio",
     desc: "Linux desktop-inspired portfolio built with Next.js 13.",
