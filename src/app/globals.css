@@ -192,3 +192,11 @@ body {
 .btn-hover:active {
   transform: scale(0.96);
 }
+
+/* Phone View Specific Style Classes to bypass theme overrides */
+.text-phone-white { color: #ffffff !important; }
+.text-phone-white-secondary { color: rgba(255, 255, 255, 0.75) !important; }
+.text-phone-white-muted { color: rgba(255, 255, 255, 0.4) !important; }
+.bg-phone-dark-elevated { background-color: rgba(255, 255, 255, 0.08) !important; }
+.border-phone-dark-subtle { border-color: rgba(255, 255, 255, 0.1) !important; }
+

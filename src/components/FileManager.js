@@ -54,17 +54,25 @@ function Breadcrumb({ path, onNavigate, onRoot }) {
   );
 }
 
-function FolderGrid({ items, selected, onSelect, onOpen }) {
+function FolderGrid({ items, selected, onSelect, onOpen, isMobile }) {
   return (
     <div className="p-4">
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
         {items.map((item, i) => {
           const isFolder = item.type === "folder";
           const isSelected = selected === i;
           return (
             <button
               key={i}
-              onClick={() => onSelect(i)}
+              onClick={() => {
+                if (isMobile) {
+                  onOpen(item);
+                } else if (isSelected) {
+                  onOpen(item);
+                } else {
+                  onSelect(i);
+                }
+              }}
               onDoubleClick={() => onOpen(item)}
               className={`flex flex-col items-center p-3 rounded-xl transition-all duration-150 group min-h-[84px] ${
                 isSelected ? "bg-white/10 border border-white/15" : "border border-transparent hover:bg-white/5"
@@ -94,7 +102,7 @@ function FolderGrid({ items, selected, onSelect, onOpen }) {
   );
 }
 
-function FolderList({ items, selected, onSelect, onOpen }) {
+function FolderList({ items, selected, onSelect, onOpen, isMobile }) {
   return (
     <div className="p-2">
       <div className="flex items-center gap-2 px-3 py-1.5 text-[9px] font-semibold uppercase tracking-wider border-b" style={{ color: "var(--text-muted)", borderColor: "var(--border)" }}>
@@ -109,7 +117,15 @@ function FolderList({ items, selected, onSelect, onOpen }) {
         return (
           <button
             key={i}
-            onClick={() => onSelect(i)}
+            onClick={() => {
+              if (isMobile) {
+                onOpen(item);
+              } else if (isSelected) {
+                onOpen(item);
+              } else {
+                onSelect(i);
+              }
+            }}
             onDoubleClick={() => onOpen(item)}
             className={`flex items-center gap-2 w-full text-left px-3 py-2 rounded-lg transition-all duration-150 ${
               isSelected ? "bg-white/10" : "hover:bg-white/5"
@@ -132,11 +148,11 @@ function FolderList({ items, selected, onSelect, onOpen }) {
   );
 }
 
-export default function FileManager() {
+export default function FileManager({ isMobile }) {
   const { openWindow } = useWindowStore();
   const [path, setPath] = useState(["Projects"]);
   const [selectedIdx, setSelectedIdx] = useState(null);
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState(isMobile ? "list" : "grid");
 
   const currentFolder = useMemo(() => findNode(fileSystem, path), [path]);
   const items = currentFolder?.children || [];
@@ -196,7 +212,7 @@ export default function FileManager() {
 
   return (
     <div className="flex h-full bg-surface">
-      <div className="w-52 border-r border-subtle overflow-auto shrink-0" style={{ background: "var(--bg-surface)" }}>
+      <div className="w-52 border-r border-subtle overflow-auto shrink-0 hidden md:block" style={{ background: "var(--bg-surface)" }}>
         <div className="px-3 py-2.5 text-[10px] text-muted uppercase tracking-wider font-medium border-b border-subtle shrink-0">
           Files
         </div>
@@ -257,6 +273,7 @@ export default function FileManager() {
               selected={selectedIdx}
               onSelect={setSelectedIdx}
               onOpen={(item) => item.type === "folder" ? openFolder(item) : openFile(item)}
+              isMobile={isMobile}
             />
           ) : (
             <FolderGrid
@@ -264,6 +281,7 @@ export default function FileManager() {
               selected={selectedIdx}
               onSelect={setSelectedIdx}
               onOpen={(item) => item.type === "folder" ? openFolder(item) : openFile(item)}
+              isMobile={isMobile}
             />
           )}
         </div>

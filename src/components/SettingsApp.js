@@ -19,9 +19,9 @@ export default function SettingsApp() {
   const [activeSection, setActiveSection] = useState("appearance");
 
   return (
-    <div className="flex h-full">
-      <div className="w-44 border-r border-subtle shrink-0 overflow-auto p-2" style={{ background: "var(--bg-surface)" }}>
-        <div className="flex items-center gap-2.5 px-3 py-3 border-b border-subtle mb-1">
+    <div className="flex flex-col md:flex-row h-full">
+      <div className="w-full md:w-44 border-b md:border-b-0 md:border-r border-subtle shrink-0 overflow-auto p-2 flex md:flex-col gap-1" style={{ background: "var(--bg-surface)" }}>
+        <div className="hidden md:flex items-center gap-2.5 px-3 py-3 border-b border-subtle mb-1">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "var(--accent-light)" }}>
             <FiMonitor style={{ color: "var(--accent)" }} size={14} />
           </div>
@@ -37,7 +37,7 @@ export default function SettingsApp() {
             <button
               key={sec.id}
               onClick={() => setActiveSection(sec.id)}
-              className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-all duration-150 btn-hover ${
+              className={`flex items-center justify-center md:justify-start gap-2.5 flex-1 md:flex-none px-3 py-2 rounded-lg text-xs transition-all duration-150 btn-hover ${
                 isActive
                   ? "bg-accent/15 text-accent font-medium"
                   : "text-muted hover:text-secondary hover:bg-surface-hover"

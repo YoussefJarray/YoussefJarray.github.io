@@ -32,6 +32,7 @@ import PaintApp from "./PaintApp";
 import SnakeApp from "./SnakeApp";
 import BreakoutApp from "./BreakoutApp";
 import MonkeyTypeApp from "./MonkeyTypeApp";
+import AudioPlayer from "./AudioPlayer";
 import DVDScrnSaver from "./DVDScrnSaver";
 
 const appComponents = {
@@ -281,6 +282,7 @@ export default function Desktop() {
         />
       )}
 
+      <AudioPlayer />
       {afk && <DVDScrnSaver onDismiss={() => setAfk(false)} />}
     </div>
   );

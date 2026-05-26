@@ -20,14 +20,14 @@ function buildToc(blocks) {
   return toc;
 }
 
-export default function MarkdownViewer() {
+export default function MarkdownViewer({ isMobile }) {
   const windows = useWindowStore((s) => s.windows);
   const win = Object.values(windows).find((w) => w.app === "MarkdownViewer" && w.isOpen);
   const data = win?.data;
 
   const blocks = useMemo(() => data?.meta?.content ? parseMarkdown(data.meta.content) : [], [data]);
   const toc = useMemo(() => buildToc(blocks), [blocks]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const contentRef = useRef(null);
 
   const scrollToHeading = useCallback((id) => {

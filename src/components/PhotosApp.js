@@ -105,23 +105,21 @@ export default function PhotosApp() {
   }
 
   return (
-    <div className="h-full flex overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="h-full flex flex-col md:flex-row overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* Sidebar */}
       <div
-        className="flex flex-col shrink-0 overflow-y-auto"
-        style={{ width: 170, borderRight: "0.5px solid var(--border)", padding: "12px 0" }}
+        className="flex flex-row md:flex-col shrink-0 overflow-x-auto md:overflow-y-auto border-b md:border-b-0 md:border-r border-subtle w-full md:w-44 p-2 md:py-3 md:px-0 gap-1.5 hide-scrollbar"
+        style={{ borderRightColor: "var(--border)", borderBottomColor: "var(--border)" }}
       >
-        <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", padding: "0 14px 10px" }}>
+        <span className="hidden md:block" style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", padding: "0 14px 10px" }}>
           Library
         </span>
         {cats.map((cat) => (
           <button
             key={cat}
             onClick={() => { setFilter(cat); setLbIdx(null); }}
-            className="text-left"
+            className="text-left whitespace-nowrap rounded-lg text-xs md:text-sm px-3.5 py-1.5 md:py-2 md:px-4"
             style={{
-              padding: "7px 14px",
-              fontSize: 12,
               color: filter === cat ? "var(--accent)" : "var(--text-secondary)",
               background: filter === cat ? "var(--accent-light)" : "transparent",
               borderRight: filter === cat ? "2px solid var(--accent)" : "2px solid transparent",
@@ -152,7 +150,7 @@ export default function PhotosApp() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
               gap: 10,
             }}
           >

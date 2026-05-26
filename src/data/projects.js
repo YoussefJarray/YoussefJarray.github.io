@@ -1,23 +1,13 @@
-export const projects = [
-  {
-    title: "FitVR",
-    desc: "VR fitness game built in Unity 6. Modular architecture with Core, MiniGames, Lobby, and Services modules.",
-    tags: ["Unity", "C#", "VR", "Game Dev"],
-    href: "https://github.com/YoussefJarray/FitVR",
-  },
-  {
-    title: "Taskr",
-    desc: "Full-featured todo app built with React / Vite.js with a clean, minimal interface.",
-    tags: ["React", "Vite", "JavaScript"],
-    href: "https://github.com/YoussefJarray/Taskr",
-  },
-  {
-    title: "This Portfolio",
-    desc: "Linux desktop-inspired portfolio built with Next.js 13, Zustand, and Tailwind CSS.",
-    tags: ["Next.js", "Tailwind", "Zustand"],
-    href: "https://github.com/YoussefJarray/YoussefJarray.github.io",
-  },
-];
+import rawProjects from "./projects.json";
+
+const mapProject = (p) => ({
+  title: p.name,
+  desc: p.desc,
+  tags: p.tags,
+  href: p.href,
+});
+
+export const projects = rawProjects.map(mapProject);
 
 export const stats = [
   { value: "C#", label: "Main Language" },
