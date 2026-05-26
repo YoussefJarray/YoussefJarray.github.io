@@ -86,8 +86,8 @@ export default function BottomPanel() {
   const battery = useBattery();
   const network = useNetwork();
   const audioStore = useAudioStore();
-  const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(50);
+  const volume = Math.round(audioStore.volume * 100);
+  const muted = audioStore.muted;
   const panelRef = useRef(null);
 
   useEffect(() => {
@@ -131,14 +131,11 @@ export default function BottomPanel() {
 
   const handleMuteToggle = () => {
     audioStore.toggleMute();
-    setMuted(!muted);
   };
 
   const handleVolumeChange = (e) => {
     const val = parseInt(e.target.value);
-    setVolume(val);
     audioStore.setVolume(val / 100);
-    setMuted(val === 0);
   };
 
   const openWindows = Object.values(windows).filter((w) => w.isOpen);

@@ -432,8 +432,8 @@ export default function TopPanel() {
 
   const { focusedWindowId, windows, openWindow, focusWindow, closeWindow, minimizeWindow, setStartMenuOpen, startMenuOpen } = useWindowStore();
   const audioStore = useAudioStore();
-  const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(50);
+  const volume = Math.round(audioStore.volume * 100);
+  const muted = audioStore.muted;
   const battery = useBattery();
   const network = useNetwork();
 
@@ -485,14 +485,11 @@ export default function TopPanel() {
 
   const handleVolumeChange = (e) => {
     const val = parseInt(e.target.value);
-    setVolume(val);
     audioStore.setVolume(val / 100);
-    setMuted(val === 0);
   };
 
   const handleMuteToggle = () => {
     audioStore.toggleMute();
-    setMuted(!muted);
   };
 
   const filteredApps = useMemo(() => {

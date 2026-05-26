@@ -31,5 +31,11 @@ export default function AudioPlayer() {
     }
   }, [currentIdx]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = muted ? 0 : Math.max(0, Math.min(1, (volume ?? 0.5) * (duckVolume ?? 1)));
+  }, [volume, muted, duckVolume]);
+
   return <audio ref={audioRef} preload="auto" />;
 }
