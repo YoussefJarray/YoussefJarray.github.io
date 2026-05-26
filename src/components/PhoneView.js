@@ -158,8 +158,9 @@ export default function PhoneView() {
 
     if (dy > 0) {
       if (isLocked) return;
-      if (!drawerOpen && !recentsOpen) setQuickOpen(true);
-      else if (drawerOpen) setDrawerOpen(false);
+      if (!drawerOpen && !recentsOpen) {
+        if (touchStartY.current <= 40) setQuickOpen(true);
+      } else if (drawerOpen) setDrawerOpen(false);
     } else {
       if (isLocked) { setIsLocked(false); return; }
       if (quickOpen) {

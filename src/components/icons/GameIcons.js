@@ -7,9 +7,10 @@ export function DoomIcon({ size = 16 }) {
 export function PongIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="2" y="5" width="2.5" height="8" rx="1" fill="currentColor" />
-      <rect x="19.5" y="7" width="2.5" height="8" rx="1" fill="currentColor" />
-      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      <rect x="2" y="5" width="2.5" height="8" rx="1" fill="#f97316" />
+      <rect x="19.5" y="7" width="2.5" height="8" rx="1" fill="#f97316" />
+      <circle cx="12" cy="12" r="1.5" fill="#f97316" />
+      <line x1="12" y1="2" x2="12" y2="22" stroke="#f97316" strokeWidth="0.5" opacity="0.2" />
     </svg>
   );
 }
@@ -17,11 +18,11 @@ export function PongIcon({ size = 16 }) {
 export function TicTacToeIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="8.5" y1="2" x2="8.5" y2="22" stroke="currentColor" strokeWidth="1.2" />
-      <line x1="15.5" y1="2" x2="15.5" y2="22" stroke="currentColor" strokeWidth="1.2" />
-      <line x1="2" y1="8.5" x2="22" y2="8.5" stroke="currentColor" strokeWidth="1.2" />
-      <line x1="2" y1="15.5" x2="22" y2="15.5" stroke="currentColor" strokeWidth="1.2" />
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <line x1="8.5" y1="2" x2="8.5" y2="22" stroke="#6b7280" strokeWidth="1.2" />
+      <line x1="15.5" y1="2" x2="15.5" y2="22" stroke="#6b7280" strokeWidth="1.2" />
+      <line x1="2" y1="8.5" x2="22" y2="8.5" stroke="#6b7280" strokeWidth="1.2" />
+      <line x1="2" y1="15.5" x2="22" y2="15.5" stroke="#6b7280" strokeWidth="1.2" />
       <line x1="5.5" y1="5.5" x2="11.5" y2="11.5" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
       <line x1="11.5" y1="5.5" x2="5.5" y2="11.5" stroke="#f97316" strokeWidth="2" strokeLinecap="round" />
       <circle cx="18" cy="18" r="3.2" fill="none" stroke="#34d399" strokeWidth="2" />
@@ -32,12 +33,13 @@ export function TicTacToeIcon({ size = 16 }) {
 export function PdfIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="3" y="2" width="18" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="7" y1="7" x2="17" y2="7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="7" y1="11" x2="17" y2="11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="7" y1="15" x2="13" y2="15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      <path d="M17 17l2 2-2 2" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M19 19h-5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <rect x="3" y="2" width="18" height="20" rx="2" fill="none" stroke="#ef4444" strokeWidth="1.5" />
+      <rect x="5" y="4" width="14" height="3" rx="0.5" fill="#ef4444" opacity="0.15" />
+      <line x1="7" y1="7" x2="17" y2="7" stroke="#ef4444" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="7" y1="11" x2="17" y2="11" stroke="#ef4444" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="7" y1="15" x2="13" y2="15" stroke="#ef4444" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M17 17l2 2-2 2" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19 19h-5" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -45,16 +47,16 @@ export function PdfIcon({ size = 16 }) {
 export function SudokuIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="6.5" y1="2" x2="6.5" y2="22" stroke="currentColor" strokeWidth="1" />
-      <line x1="12" y1="2" x2="12" y2="22" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="17.5" y1="2" x2="17.5" y2="22" stroke="currentColor" strokeWidth="1" />
-      <line x1="2" y1="6.5" x2="22" y2="6.5" stroke="currentColor" strokeWidth="1" />
-      <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5" />
-      <line x1="2" y1="17.5" x2="22" y2="17.5" stroke="currentColor" strokeWidth="1" />
-      <text x="4.5" y="6" fontSize="3.2" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">1</text>
-      <text x="10.2" y="10.5" fontSize="3.2" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">2</text>
-      <text x="15.8" y="16.5" fontSize="3.2" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">3</text>
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <line x1="6.5" y1="2" x2="6.5" y2="22" stroke="#6b7280" strokeWidth="1" />
+      <line x1="12" y1="2" x2="12" y2="22" stroke="#6b7280" strokeWidth="1.5" />
+      <line x1="17.5" y1="2" x2="17.5" y2="22" stroke="#6b7280" strokeWidth="1" />
+      <line x1="2" y1="6.5" x2="22" y2="6.5" stroke="#6b7280" strokeWidth="1" />
+      <line x1="2" y1="12" x2="22" y2="12" stroke="#6b7280" strokeWidth="1.5" />
+      <line x1="2" y1="17.5" x2="22" y2="17.5" stroke="#6b7280" strokeWidth="1" />
+      <text x="4.5" y="6" fontSize="3.2" fill="#f97316" fontWeight="700" fontFamily="Arial">1</text>
+      <text x="10.2" y="10.5" fontSize="3.2" fill="#f97316" fontWeight="700" fontFamily="Arial">2</text>
+      <text x="15.8" y="16.5" fontSize="3.2" fill="#f97316" fontWeight="700" fontFamily="Arial">3</text>
     </svg>
   );
 }
@@ -62,13 +64,13 @@ export function SudokuIcon({ size = 16 }) {
 export function CalculatorIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="3" y="2" width="18" height="20" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="5" y="4" width="14" height="6" rx="1" fill="currentColor" opacity="0.15" />
-      <text x="7" y="9" fontSize="5" fill="currentColor" fontWeight="700" fontFamily="Arial">123</text>
-      <text x="7" y="16" fontSize="5" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">+</text>
-      <text x="13" y="16" fontSize="5" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">-</text>
-      <text x="7" y="21" fontSize="5" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">×</text>
-      <text x="13" y="21" fontSize="5" fill="var(--accent, #f97316)" fontWeight="700" fontFamily="Arial">÷</text>
+      <rect x="3" y="2" width="18" height="20" rx="2" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <rect x="5" y="4" width="14" height="6" rx="1" fill="#6b7280" opacity="0.15" />
+      <text x="7" y="9" fontSize="5" fill="#6b7280" fontWeight="700" fontFamily="Arial">123</text>
+      <text x="7" y="16" fontSize="5" fill="#f97316" fontWeight="700" fontFamily="Arial">+</text>
+      <text x="13" y="16" fontSize="5" fill="#f97316" fontWeight="700" fontFamily="Arial">-</text>
+      <text x="7" y="21" fontSize="5" fill="#f97316" fontWeight="700" fontFamily="Arial">×</text>
+      <text x="13" y="21" fontSize="5" fill="#f97316" fontWeight="700" fontFamily="Arial">÷</text>
     </svg>
   );
 }
@@ -76,13 +78,13 @@ export function CalculatorIcon({ size = 16 }) {
 export function MinesweeperIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.2" />
-      <circle cx="12" cy="12" r="1.5" fill="var(--accent, #f97316)" />
-      <line x1="12" y1="4" x2="12" y2="8" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-      <line x1="12" y1="16" x2="12" y2="20" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-      <line x1="4" y1="12" x2="8" y2="12" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-      <line x1="16" y1="12" x2="20" y2="12" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+      <rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="3" fill="#6b7280" opacity="0.2" />
+      <circle cx="12" cy="12" r="1.5" fill="#f97316" />
+      <line x1="12" y1="4" x2="12" y2="8" stroke="#6b7280" strokeWidth="1" strokeLinecap="round" />
+      <line x1="12" y1="16" x2="12" y2="20" stroke="#6b7280" strokeWidth="1" strokeLinecap="round" />
+      <line x1="4" y1="12" x2="8" y2="12" stroke="#6b7280" strokeWidth="1" strokeLinecap="round" />
+      <line x1="16" y1="12" x2="20" y2="12" stroke="#6b7280" strokeWidth="1" strokeLinecap="round" />
     </svg>
   );
 }
@@ -98,12 +100,12 @@ export function GitHubIcon({ size = 16 }) {
 export function PaintIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="3" y="3" width="18" height="14" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M12 17v4M8 21h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="12" cy="10" r="3" fill="var(--accent, #f97316)" />
-      <circle cx="8" cy="7" r="1" fill="currentColor" opacity="0.3" />
-      <circle cx="16" cy="7" r="1" fill="currentColor" opacity="0.3" />
-      <circle cx="12" cy="6" r="1" fill="currentColor" opacity="0.3" />
+      <rect x="3" y="3" width="18" height="14" rx="2" fill="none" stroke="#6b7280" strokeWidth="1.5" />
+      <path d="M12 17v4M8 21h8" stroke="#6b7280" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="12" cy="10" r="3" fill="#f97316" />
+      <circle cx="8" cy="7" r="1" fill="#6b7280" opacity="0.3" />
+      <circle cx="16" cy="7" r="1" fill="#6b7280" opacity="0.3" />
+      <circle cx="12" cy="6" r="1" fill="#6b7280" opacity="0.3" />
     </svg>
   );
 }
@@ -111,14 +113,14 @@ export function PaintIcon({ size = 16 }) {
 export function MemoryIcon({ size = 16 }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} className="shrink-0">
-      <rect x="2" y="2" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="13" y="2" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="2" y="13" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <rect x="13" y="13" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="4.5" y="9" fontSize="6" fill="var(--accent, #f97316)">?</text>
-      <text x="15.5" y="9" fontSize="6" fill="var(--accent, #f97316)">?</text>
-      <text x="4.5" y="20" fontSize="6" fill="var(--accent, #f97316)">?</text>
-      <text x="15.5" y="20" fontSize="6" fill="var(--accent, #f97316)">?</text>
+      <rect x="2" y="2" width="9" height="9" rx="1.5" fill="none" stroke="#8b5cf6" strokeWidth="1.5" />
+      <rect x="13" y="2" width="9" height="9" rx="1.5" fill="none" stroke="#8b5cf6" strokeWidth="1.5" />
+      <rect x="2" y="13" width="9" height="9" rx="1.5" fill="none" stroke="#8b5cf6" strokeWidth="1.5" />
+      <rect x="13" y="13" width="9" height="9" rx="1.5" fill="none" stroke="#8b5cf6" strokeWidth="1.5" />
+      <text x="4.5" y="9" fontSize="6" fill="#f97316">?</text>
+      <text x="15.5" y="9" fontSize="6" fill="#f97316">?</text>
+      <text x="4.5" y="20" fontSize="6" fill="#f97316">?</text>
+      <text x="15.5" y="20" fontSize="6" fill="#f97316">?</text>
     </svg>
   );
 }

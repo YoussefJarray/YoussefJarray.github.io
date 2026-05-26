@@ -116,7 +116,7 @@ function DesktopIcon({ id, icon, label, onActivate, wallpaperDark, defaultPos, s
       onClick={() => setShowFull(s => !s)}
     >
       <span ref={iconRef} className="flex items-center justify-center select-none pointer-events-none will-change-transform" style={{ width: 36, height: 36, filter: iconFilter }}>
-        {getDesktopIcon(id, wallpaperDark)}
+        {getDesktopIcon(id)}
       </span>
       <span ref={labelRef} className="text-[11px] text-center leading-tight px-1 py-0.5 rounded-md select-none pointer-events-none" style={{
         color: wallpaperDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.85)",
