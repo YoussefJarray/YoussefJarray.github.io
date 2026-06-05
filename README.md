@@ -12,12 +12,6 @@
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat)](LICENSE)
 [![Deployed on GitHub Pages](https://img.shields.io/badge/deployed-GitHub_Pages-222?style=flat&logo=github)](https://youssefjarray.github.io/)
 
-<br>
-
-![Full Desktop](public/screenshots/desktop-full.png)
-
-*A complete KDE-inspired desktop environment built with Next.js and React*
-
 </div>
 
 ---
